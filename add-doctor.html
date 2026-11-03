@@ -1,0 +1,174 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Add Doctor | CareBridge</title>
+  <link rel="stylesheet" href="css/add-doctor.css">
+</head>
+
+<body>
+
+<header class="page-header">
+  <a href="clinic-dashboard.html" class="brand">
+    <span class="logo">✚</span>
+    CareBridge
+  </a>
+  <a href="clinic-dashboard.html" class="back-link">
+    ← Dashboard
+  </a>
+</header>
+
+<main class="page-container">
+
+  <section class="page-intro">
+    <p class="eyebrow">INSTITUTION PORTAL</p>
+    <h1>Add a Doctor</h1>
+    <p>
+      Add a doctor working at your clinic or hospital.
+      Their profile will be reviewed by CareBridge before publication.
+    </p>
+  </section>
+
+  <form id="addDoctorForm">
+
+    <section class="form-card">
+      <h2>Doctor Information</h2>
+      <p class="section-description">
+        Enter the doctor's professional details.
+      </p>
+
+      <div class="form-group">
+        <label for="doctorName">Doctor's Full Name *</label>
+        <input type="text" id="doctorName" name="doctorName"
+          placeholder="Enter doctor's full name" required>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="doctorPhone">Phone Number *</label>
+          <input type="tel" id="doctorPhone" name="doctorPhone"
+            placeholder="10-digit mobile number"
+            pattern="[6-9][0-9]{9}" maxlength="10" required>
+          <small>For contact information only. No doctor OTP login.</small>
+        </div>
+
+        <div class="form-group">
+          <label for="doctorEmail">Email Address</label>
+          <input type="email" id="doctorEmail" name="doctorEmail"
+            placeholder="doctor@example.com">
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="registrationNumber">Medical Registration Number *</label>
+        <input type="text" id="registrationNumber"
+          name="registrationNumber"
+          placeholder="Enter registration number" required>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="qualification">Qualification *</label>
+          <input type="text" id="qualification" name="qualification"
+            placeholder="e.g. MBBS, MD" required>
+        </div>
+
+        <div class="form-group">
+          <label for="specialty">Specialty *</label>
+          <input type="text" id="specialty" name="specialty"
+            placeholder="e.g. Cardiology" required>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label for="experience">Years of Experience *</label>
+        <input type="number" id="experience" name="experience"
+          min="0" max="70" placeholder="e.g. 5" required>
+      </div>
+    </section>
+
+    <section class="form-card">
+      <h2>Consultation Details</h2>
+      <p class="section-description">
+        Set the doctor's consultation fee and availability.
+      </p>
+
+      <div class="form-group">
+        <label for="consultationFee">Consultation Fee (₹) *</label>
+        <input type="number" id="consultationFee"
+          name="consultationFee" min="0" step="1"
+          placeholder="e.g. 500" required>
+      </div>
+
+      <div class="form-group">
+        <label>Available Days *</label>
+        <div class="days-grid">
+          <label><input type="checkbox" name="availableDays" value="Monday"> Monday</label>
+          <label><input type="checkbox" name="availableDays" value="Tuesday"> Tuesday</label>
+          <label><input type="checkbox" name="availableDays" value="Wednesday"> Wednesday</label>
+          <label><input type="checkbox" name="availableDays" value="Thursday"> Thursday</label>
+          <label><input type="checkbox" name="availableDays" value="Friday"> Friday</label>
+          <label><input type="checkbox" name="availableDays" value="Saturday"> Saturday</label>
+          <label><input type="checkbox" name="availableDays" value="Sunday"> Sunday</label>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="startTime">Starting Time *</label>
+          <input type="time" id="startTime" name="startTime" required>
+        </div>
+
+        <div class="form-group">
+          <label for="endTime">Ending Time *</label>
+          <input type="time" id="endTime" name="endTime" required>
+        </div>
+      </div>
+    </section>
+
+    <section class="form-card">
+      <h2>Profile Photograph</h2>
+      <p class="section-description">
+        Add a photograph for the doctor's public profile.
+      </p>
+
+      <div class="form-group">
+        <label for="doctorPhoto">Doctor's Photograph</label>
+        <input type="file" id="doctorPhoto" name="doctorPhoto"
+          accept="image/jpeg,image/png,image/webp">
+        <small>Maximum recommended size: 2 MB.</small>
+      </div>
+    </section>
+
+    <section class="declaration-card">
+      <label class="declaration-label">
+        <input type="checkbox" id="institutionDeclaration" required>
+        <span>
+          I confirm that this doctor is associated with our institution
+          and that we are authorised to submit these professional details
+          for CareBridge verification and listing.
+        </span>
+      </label>
+    </section>
+
+    <button type="submit" class="submit-btn">
+      Submit Doctor for Approval
+    </button>
+
+    <p class="form-note">
+      The doctor will not appear publicly until CareBridge Admin
+      verifies and approves the submitted information.
+    </p>
+
+  </form>
+
+</main>
+
+<footer>
+  © 2026 CareBridge. All rights reserved.
+</footer>
+<script src="js/clinic-doctors.js"></script>
+</body>
+</html>

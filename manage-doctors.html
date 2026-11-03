@@ -1,0 +1,135 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manage Doctors | CareBridge</title>
+  <link rel="stylesheet" href="css/manage-doctors.css">
+</head>
+
+<body>
+
+<header class="page-header">
+  <a href="clinic-dashboard.html" class="brand">
+    <span class="logo">✚</span>
+    CareBridge
+  </a>
+
+  <a href="clinic-dashboard.html" class="back-link">
+    ← Dashboard
+  </a>
+</header>
+
+<main class="page-container">
+
+  <section class="page-intro">
+    <p class="eyebrow">INSTITUTION PORTAL</p>
+    <h1>Manage Doctors</h1>
+    <p>View and manage doctors associated with your clinic or hospital.</p>
+  </section>
+
+  <section class="stats-grid">
+
+    <div class="stat-card">
+      <span>Total Doctors</span>
+      <h2 id="totalDoctors">0</h2>
+    </div>
+
+    <div class="stat-card">
+      <span>Approved</span>
+      <h2 id="approvedDoctors">0</h2>
+    </div>
+
+    <div class="stat-card">
+      <span>Pending</span>
+      <h2 id="pendingDoctors">0</h2>
+    </div>
+
+    <div class="stat-card">
+      <span>Rejected</span>
+      <h2 id="rejectedDoctors">0</h2>
+    </div>
+
+  </section>
+
+  <section class="management-section">
+
+    <div class="section-heading">
+      <div>
+        <h2>Institution's Doctors</h2>
+        <p>Manage your registered medical professionals.</p>
+      </div>
+
+      <a href="add-doctor.html" class="add-btn">
+        + Add Doctor
+      </a>
+    </div>
+
+    <div class="filter-panel">
+
+      <div class="search-box">
+        <input
+          type="search"
+          id="doctorSearch"
+          placeholder="Search doctor by name or specialty..."
+        >
+      </div>
+
+      <div class="filter-row">
+        <select id="statusFilter">
+          <option value="all">All Statuses</option>
+          <option value="pending">Pending Approval</option>
+          <option value="approved">Approved</option>
+          <option value="rejected">Rejected</option>
+        </select>
+
+        <select id="specialtyFilter">
+          <option value="all">All Specialties</option>
+        </select>
+      </div>
+
+    </div>
+
+    <div id="doctorList" class="doctor-list">
+
+      <div class="empty-state" id="emptyState">
+        <div class="empty-icon">♙</div>
+        <h3>No doctors added yet</h3>
+        <p>
+          Doctors added by your institution will appear here.
+          You can manage their profiles and approval status from this page.
+        </p>
+        <a href="add-doctor.html" class="add-btn">
+          Add Your First Doctor
+        </a>
+      </div>
+
+    </div>
+
+    <p id="noResults" class="no-results" hidden>
+      No doctors match your search.
+    </p>
+
+  </section>
+
+  <section class="information-card">
+    <h3>Doctor Management Guidelines</h3>
+    <ul>
+      <li>Every approved doctor receives a unique CareBridge Doctor ID.</li>
+      <li>Only approved doctors appear in the public Doctors directory.</li>
+      <li>You can update a doctor's information through your dashboard.</li>
+      <li>Removing a doctor ends their association with your institution.</li>
+      <li>Removing a doctor does not delete their profile or appointment history.</li>
+    </ul>
+  </section>
+
+</main>
+
+<footer>
+  © 2026 CareBridge. All rights reserved.
+</footer>
+<script src="js/clinic-doctors.js"></script>
+</body>
+</html>
+

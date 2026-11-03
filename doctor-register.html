@@ -1,0 +1,232 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#087f78">
+
+  <title>Doctor Registration | CareBridge</title>
+
+  <link rel="stylesheet" href="css/doctor-register.css">
+</head>
+
+<body>
+
+<header class="register-header">
+  <div class="header-inner">
+    <a href="index.html" class="brand">
+      <span class="logo">✚</span>
+      CareBridge
+    </a>
+
+    <a href="index.html" class="back-link">← Back to Home</a>
+  </div>
+</header>
+
+<main class="register-container">
+
+  <div class="register-heading">
+    <span class="eyebrow">JOIN CAREBRIDGE</span>
+    <h1>Doctor Registration</h1>
+    <p>
+      Create your professional profile and take the first step
+      towards joining the CareBridge healthcare network.
+    </p>
+  </div>
+
+  <div class="registration-card">
+
+    <div class="form-heading">
+      <h2>Professional Information</h2>
+      <p>Enter your basic professional details.</p>
+    </div>
+
+    <form id="doctorRegistrationForm">
+
+      <div class="form-group">
+        <label for="fullName">Full Name *</label>
+        <input
+          type="text"
+          id="fullName"
+          placeholder="Enter your full name"
+          required>
+      </div>
+
+      <div class="form-row">
+
+        <div class="form-group">
+          <label for="email">Email Address *</label>
+          <input
+            type="email"
+            id="email"
+            placeholder="Enter your email"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="phone">Mobile Number *</label>
+          <input
+            type="tel"
+            id="phone"
+            placeholder="Enter mobile number"
+            required>
+        </div>
+
+      </div>
+
+      <div class="form-row">
+
+        <div class="form-group">
+          <label for="qualification">Highest Medical Qualification *</label>
+          <input
+            type="text"
+            id="qualification"
+            placeholder="e.g. MBBS, MD"
+            required>
+        </div>
+
+        <div class="form-group">
+          <label for="specialty">Medical Specialty *</label>
+          <select id="specialty" required>
+            <option value="">Select specialty</option>
+            <option>General Physician</option>
+            <option>Dermatologist</option>
+            <option>Paediatrician</option>
+            <option>Cardiologist</option>
+            <option>Gynaecologist</option>
+            <option>Orthopaedic Surgeon</option>
+            <option>Neurologist</option>
+            <option>Psychiatrist</option>
+            <option>Ophthalmologist</option>
+            <option>ENT Specialist</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+      </div>
+
+      <div class="form-group">
+        <label for="registrationNumber">
+          Medical Registration Number *
+        </label>
+        <input
+          type="text"
+          id="registrationNumber"
+          placeholder="Enter your medical registration number"
+          required>
+        <small>
+          This will be used for professional verification.
+        </small>
+      </div>
+
+      <div class="form-group">
+        <label for="experience">Years of Experience *</label>
+        <input
+          type="number"
+          id="experience"
+          min="0"
+          max="70"
+          placeholder="Enter years of experience"
+          required>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <div class="form-heading">
+        <h2>Practice Information</h2>
+        <p>Tell us where you currently practise.</p>
+      </div>
+
+      <div class="form-group">
+        <label for="practiceType">Practice Type *</label>
+        <select id="practiceType" required>
+          <option value="">Select practice type</option>
+          <option>Own Clinic</option>
+          <option>Hospital</option>
+          <option>Private Practice</option>
+          <option>Multiple Locations</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="clinicName">Clinic / Hospital Name *</label>
+        <input
+          type="text"
+          id="clinicName"
+          placeholder="Enter clinic or hospital name"
+          required>
+      </div>
+
+      <div class="form-row">
+
+        <div class="form-group">
+          <label for="city">City *</label>
+          <select id="city" required>
+            <option value="">Select city</option>
+            <option>Hojai</option>
+            <option>Guwahati</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="consultationFee">Consultation Fee (₹)</label>
+          <input
+            type="number"
+            id="consultationFee"
+            min="0"
+            placeholder="Enter proposed fee">
+        </div>
+
+      </div>
+
+      <div class="form-group">
+        <label for="address">Practice Address *</label>
+        <textarea
+          id="address"
+          rows="3"
+          placeholder="Enter complete practice address"
+          required></textarea>
+      </div>
+
+      <div class="section-divider"></div>
+
+      <div class="verification-note">
+        <strong>Professional verification</strong>
+        <p>
+          CareBridge will verify professional registration and
+          submitted information before publishing a doctor profile.
+        </p>
+      </div>
+
+      <div class="form-group consent">
+        <label>
+          <input type="checkbox" id="declaration" required>
+          I confirm that the information provided is accurate
+          and belongs to me.
+        </label>
+      </div>
+
+      <button type="button" class="submit-button" disabled>
+        Registration Submission — Coming Soon
+      </button>
+
+      <p class="form-disclaimer">
+        Registration is not yet connected to a secure server.
+        Do not enter real personal or professional information
+        in this prototype.
+      </p>
+
+    </form>
+
+  </div>
+
+</main>
+
+<footer class="register-footer">
+  <p>© CareBridge · Connecting people with care.</p>
+</footer>
+
+</body>
+</html>

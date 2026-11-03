@@ -1,0 +1,170 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <meta name="description" content="Login or create your CareBridge account.">
+
+  <title>Login / Register | CareBridge</title>
+
+  <link rel="stylesheet" href="css/login.css">
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="auth-header">
+    <div class="header-inner">
+      <a href="index.html" class="brand">
+        <span class="logo">✚</span>
+        CareBridge
+      </a>
+
+      <a href="index.html" class="back-link">
+        ← Back to Home
+      </a>
+    </div>
+  </header>
+
+  <!-- AUTHENTICATION AREA -->
+  <main class="auth-container">
+
+    <div class="auth-heading">
+      <span class="eyebrow">WELCOME TO CAREBRIDGE</span>
+      <h1>Your Healthcare Journey Starts Here</h1>
+      <p>Sign in or create an account to continue.</p>
+    </div>
+
+    <div class="auth-card">
+
+      <!-- ACCOUNT TYPE -->
+      <div class="account-type">
+        <h2>Continue as</h2>
+
+        <div class="role-options">
+
+          <label class="role-option active">
+            <input type="radio" name="accountType"
+              value="patient" checked>
+            <span class="role-icon">♙</span>
+            <span>Patient</span>
+          </label>
+
+          <label class="role-option">
+            <input type="radio" name="accountType"
+              value="doctor">
+            <span class="role-icon">⚕</span>
+            <span>Doctor</span>
+          </label>
+
+          <label class="role-option">
+            <input type="radio" name="accountType"
+              value="clinic">
+            <span class="role-icon">✚</span>
+            <span>Clinic / Hospital</span>
+          </label>
+
+        </div>
+      </div>
+
+      <!-- LOGIN / REGISTER TABS -->
+      <div class="auth-tabs">
+        <button type="button" class="tab active"
+          id="loginTab">
+          Login
+        </button>
+
+        <button type="button" class="tab"
+          id="registerTab">
+          Create Account
+        </button>
+      </div>
+
+      <!-- LOGIN FORM -->
+      <form id="loginForm" class="auth-form">
+
+        <h2>Welcome Back!</h2>
+        <p>Enter your account details to log in.</p>
+
+        <label for="loginEmail">Email Address</label>
+        <input type="email" id="loginEmail"
+          placeholder="Enter your email address" required>
+
+        <label for="loginPassword">Password</label>
+        <input type="password" id="loginPassword"
+          placeholder="Enter your password" required>
+
+        <div class="form-options">
+          <label class="remember">
+            <input type="checkbox">
+            Remember me
+          </label>
+
+          <a href="#" id="forgotPassword">
+            Forgot Password?
+          </a>
+        </div>
+
+        <button type="submit" class="submit-button">
+          Login to CareBridge
+        </button>
+
+      </form>
+
+      <!-- REGISTRATION FORM -->
+      <form id="registerForm" class="auth-form hidden">
+
+        <h2>Create Your Account</h2>
+        <p>Fill in the details to get started.</p>
+
+        <label for="fullName">Full Name</label>
+        <input type="text" id="fullName"
+          placeholder="Enter your full name" required>
+
+        <label for="registerEmail">Email Address</label>
+        <input type="email" id="registerEmail"
+          placeholder="Enter your email address" required>
+
+        <label for="phone">Mobile Number</label>
+        <input type="tel" id="phone"
+          placeholder="Enter 10-digit mobile number"
+          pattern="[0-9]{10}" maxlength="10" required>
+
+        <label for="registerPassword">Create Password</label>
+        <input type="password" id="registerPassword"
+          placeholder="Create a password" minlength="8" required>
+
+        <label for="confirmPassword">Confirm Password</label>
+        <input type="password" id="confirmPassword"
+          placeholder="Re-enter your password" minlength="8" required>
+
+        <label class="terms">
+          <input type="checkbox" id="terms" required>
+          <span>
+            I agree to the CareBridge Terms and Privacy Policy.
+          </span>
+        </label>
+
+        <button type="submit" class="submit-button">
+          Create Account
+        </button>
+
+      </form>
+
+      <p class="security-note">
+        Your account information will be handled securely
+        once the authentication system is connected.
+      </p>
+
+    </div>
+
+    <p class="auth-footer">
+      © 2026 CareBridge. All rights reserved.
+    </p>
+
+  </main>
+<script src="js/login.js"></script>
+</body>
+</html>

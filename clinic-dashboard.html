@@ -1,0 +1,370 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clinic Dashboard | CareBridge</title>
+  <link rel="stylesheet" href="css/clinic-dashboard.css">
+</head>
+<body>
+
+<header class="dashboard-header">
+  <a href="index.html" class="brand">
+    <span class="logo">✚</span>
+    CareBridge
+  </a>
+
+  <div class="settings-container">
+
+    <button
+      class="settings-btn"
+      id="settingsToggle"
+      type="button"
+      aria-expanded="false"
+      onclick="toggleSettingsMenu()"
+    >
+      <span>⚙</span>
+      Settings
+      <span class="settings-arrow">⌄</span>
+    </button>
+
+    <div class="settings-dropdown" id="settingsDropdown">
+
+      <a href="#clinicProfile" onclick="closeSettingsMenu()">
+        <span>🏥</span>
+        Clinic / Hospital Profile
+      </a>
+
+      <a href="#accountSecurity" onclick="closeSettingsMenu()">
+        <span>🔒</span>
+        Account & Security
+      </a>
+
+      <div class="settings-divider"></div>
+
+      <button
+        class="dropdown-logout"
+        type="button"
+        onclick="logout()"
+      >
+        <span>↪</span>
+        Logout
+      </button>
+
+    </div>
+
+  </div>
+</header>
+
+<main class="dashboard-container">
+
+  <section class="welcome-section">
+    <div>
+      <p class="eyebrow">Clinic / Hospital Portal</p>
+      <h1>Clinic Dashboard</h1>
+      <p>Manage your institution and its registered doctors.</p>
+    </div>
+    <div class="status-badge">Application Pending</div>
+  </section>
+
+  <section class="institution-card" id="clinicProfile">
+
+<div class="institution-logo">
+  <span id="defaultLogoIcon">✚</span>
+
+  <img
+    id="institutionLogoDisplay"
+    src=""
+    alt="Clinic / Hospital Logo"
+    hidden
+  >
+</div>
+
+  <div class="institution-details">
+
+    <div class="institution-title-row">
+      <div>
+        <h2 id="institutionName">Your Clinic / Hospital Name</h2>
+        <p id="institutionType">Clinic / Hospital</p>
+      </div>
+
+      <span class="profile-status">
+        Application Pending
+      </span>
+    </div>
+
+    <div class="institution-contact">
+
+      <p>
+        <span>📍</span>
+        <span id="institutionAddress">Address not added yet</span>
+      </p>
+
+      <p>
+        <span>☎</span>
+        <span id="institutionPhone">Phone number not added yet</span>
+      </p>
+
+      <p>
+        <span>✉</span>
+        <span id="institutionEmail">Email not added yet</span>
+      </p>
+
+      <p>
+        <span>🕒</span>
+        <span id="institutionHours">Operating hours not added yet</span>
+      </p>
+
+    </div>
+<button
+  type="button"
+  class="edit-profile-btn"
+  id="openProfileEdit"
+>
+  ✎ Edit Profile
+</button>
+  </div>
+
+  </section>
+  <section class="dashboard-section profile-edit-section" id="editProfileSection" hidden>
+
+  <div class="section-heading">
+    <div>
+      <h2>Edit Clinic / Hospital Profile</h2>
+      <p>Update your healthcare institution information.</p>
+    </div>
+  </div>
+
+  <form id="clinicProfileForm">
+    <div class="form-group full-width">
+  <label for="profileLogo">Clinic / Hospital Logo</label>
+
+  <div class="image-upload-box">
+    <img
+      id="logoPreview"
+      src=""
+      alt="Clinic / Hospital Logo"
+      hidden
+    >
+
+    <input
+      type="file"
+      id="profileLogo"
+      accept="image/png,image/jpeg,image/webp"
+    >
+
+    <small>Upload your clinic or hospital logo (PNG, JPG or WebP).</small>
+  </div>
+    </div>
+
+    <div class="profile-form-grid">
+
+      <div class="form-group">
+        <label for="profileName">Clinic / Hospital Name</label>
+        <input type="text" id="profileName" required>
+      </div>
+
+      <div class="form-group">
+        <label for="profileType">Institution Type</label>
+        <select id="profileType" required>
+          <option value="">Select type</option>
+          <option value="Clinic">Clinic</option>
+          <option value="Hospital">Hospital</option>
+          <option value="Nursing Home">Nursing Home</option>
+          <option value="Diagnostic Centre">Diagnostic Centre</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label for="profileRegistration">Registration Number</label>
+        <input type="text" id="profileRegistration" required>
+      </div>
+
+      <div class="form-group">
+        <label for="profilePhone">Contact Number</label>
+        <input type="tel" id="profilePhone" required>
+      </div>
+
+      <div class="form-group">
+        <label for="profileEmail">Email Address</label>
+        <input type="email" id="profileEmail" required>
+      </div>
+
+      <div class="form-group">
+        <label for="profileCity">City</label>
+        <input type="text" id="profileCity" required>
+      </div>
+
+      <div class="form-group">
+        <label for="profilePincode">PIN Code</label>
+        <input type="text" id="profilePincode" maxlength="6" required>
+      </div>
+
+      <div class="form-group full-width">
+        <label for="profileAddress">Full Address</label>
+        <textarea id="profileAddress" rows="3" required></textarea>
+      </div>
+
+      <div class="form-group full-width">
+        <label for="profileDescription">About Clinic / Hospital</label>
+        <textarea id="profileDescription" rows="4"></textarea>
+      </div>
+
+      <div class="form-group full-width">
+        <label for="profileServices">Healthcare Services and Facilities</label>
+        <textarea id="profileServices" rows="3"
+          placeholder="Example: General Medicine, Emergency Care, Laboratory"></textarea>
+      </div>
+
+      <div class="form-group">
+        <label for="profileOpening">Opening Time</label>
+        <input type="time" id="profileOpening" required>
+      </div>
+
+      <div class="form-group">
+        <label for="profileClosing">Closing Time</label>
+        <input type="time" id="profileClosing" required>
+      </div>
+
+      <div class="form-group full-width">
+        <label>Operating Days</label>
+
+        <div class="profile-days">
+          <label><input type="checkbox" name="profileDays" value="Monday"> Monday</label>
+          <label><input type="checkbox" name="profileDays" value="Tuesday"> Tuesday</label>
+          <label><input type="checkbox" name="profileDays" value="Wednesday"> Wednesday</label>
+          <label><input type="checkbox" name="profileDays" value="Thursday"> Thursday</label>
+          <label><input type="checkbox" name="profileDays" value="Friday"> Friday</label>
+          <label><input type="checkbox" name="profileDays" value="Saturday"> Saturday</label>
+          <label><input type="checkbox" name="profileDays" value="Sunday"> Sunday</label>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="profile-form-actions">
+      <button type="button" id="cancelProfileEdit" class="manage-btn">
+        Cancel
+      </button>
+
+      <button type="submit" class="primary-btn">
+        Save Profile Changes
+      </button>
+    </div>
+
+  </form>
+
+  </section>
+
+  <section class="stats-grid">
+    <div class="stat-card">
+      <span>Total Doctors</span>
+      <h2 id="totalDoctors">0</h2>
+    </div>
+
+    <div class="stat-card">
+      <span>Approved Doctors</span>
+      <h2 id="approvedDoctors">0</h2>
+    </div>
+
+    <div class="stat-card">
+      <span>Pending Approval</span>
+      <h2 id="pendingDoctors">0</h2>
+    </div>
+  </section>
+
+  
+<section class="dashboard-section">
+  <div class="section-heading">
+    <div>
+      <h2>Doctor Management</h2>
+      <p>Add and manage doctors working at your institution.</p>
+    </div>
+
+    <div class="doctor-actions">
+      <a href="manage-doctors.html" class="manage-btn">
+        Manage Doctors
+      </a>
+
+      <a href="add-doctor.html" class="primary-btn">
+        + Add Doctor
+      </a>
+    </div>
+  </div>
+
+  <div class="empty-state">
+    <div class="empty-icon">♙</div>
+    <h3>No doctors added yet</h3>
+    <p>
+      Start building your institution's medical team by
+      adding your first doctor.
+    </p>
+    <a href="add-doctor.html" class="primary-btn">
+      Add Your First Doctor
+    </a>
+  </div>
+</section>
+
+
+  <section class="dashboard-section">
+    <div class="section-heading">
+      <div>
+        <h2>Appointments</h2>
+        <p>View appointments booked with your institution's doctors.</p>
+      </div>
+    </div>
+
+    <div class="simple-card">
+      <span class="card-icon">▣</span>
+      <div>
+        <h3>Appointment Management</h3>
+        <p>Your appointment records will appear here.</p>
+      </div>
+      <span class="coming-soon">Coming Soon</span>
+    </div>
+  </section>
+
+  <div class="dashboard-note">
+    <strong>Important:</strong>
+    Your institution and doctors will appear publicly on CareBridge
+    only after the required admin approvals.
+  </div>
+
+</main>
+
+<footer>
+  © 2026 CareBridge. All rights reserved.
+</footer>
+
+<script>
+function logout() {
+  alert("Logout will be connected to Firebase Authentication later.");
+}
+</script>
+<script src="js/clinic-dashboard.js"></script>
+<script>
+function toggleSettingsMenu() {
+  const dropdown = document.getElementById("settingsDropdown");
+  const button = document.getElementById("settingsToggle");
+
+  const isOpen = dropdown.classList.toggle("show");
+
+  button.setAttribute("aria-expanded", isOpen);
+}
+
+function closeSettingsMenu() {
+  document.getElementById("settingsDropdown").classList.remove("show");
+  document.getElementById("settingsToggle").setAttribute("aria-expanded", "false");
+}
+
+document.addEventListener("click", function(event) {
+  const container = document.querySelector(".settings-container");
+
+  if (container && !container.contains(event.target)) {
+    closeSettingsMenu();
+  }
+});
+</script>
+</body>
+</html>

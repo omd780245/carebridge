@@ -1,0 +1,182 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Register your clinic or hospital with CareBridge.">
+  <title>Clinic & Hospital Registration | CareBridge</title>
+
+  <link rel="stylesheet" href="css/clinic-register.css">
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="register-header">
+    <div class="header-inner">
+      <a href="index.html" class="brand">
+        <span class="logo">✚</span>
+        CareBridge
+      </a>
+
+      <a href="index.html" class="back-link">← Back to Home</a>
+    </div>
+  </header>
+
+  <!-- MAIN CONTENT -->
+  <main>
+
+    <div class="page-heading">
+      <span>JOIN CAREBRIDGE</span>
+      <h1>Clinic & Hospital Registration</h1>
+      <p>
+        Register your healthcareClinic / Hospital and connect with patients
+        looking for reliable healthcare services.
+      </p>
+    </div>
+
+    <form id="clinicRegistrationForm">
+
+      <!-- Clinic / Hospital INFORMATION -->
+      <section>
+        <h2>Clinic / Hospital Information</h2>
+        <p>Enter the basic details of your clinic or hospital.</p>
+
+        <label for="institutionName">Clinic / Hospital Name *</label>
+        <input type="text" id="institutionName" name="institutionName"
+          placeholder="Enter institution name" required>
+
+        <label for="institutionType">Clinic / Hospital Type *</label>
+        <select id="institutionType" name="institutionType" required>
+          <option value="">Select institution type</option>
+          <option value="Clinic">Clinic</option>
+          <option value="Multi-speciality Clinic">Multi-speciality Clinic</option>
+          <option value="Hospital">Hospital</option>
+          <option value="Nursing Home">Nursing Home</option>
+          <option value="Diagnostic Centre">Diagnostic Centre</option>
+        </select>
+
+        <label for="registrationNumber">Institution Registration Number *</label>
+        <input type="text" id="registrationNumber" name="registrationNumber"
+          placeholder="Enter official registration number" required>
+
+        <label for="establishmentYear">Year of Establishment</label>
+        <input type="number" id="establishmentYear" name="establishmentYear"
+          placeholder="e.g. 2018" min="1800" max="2100">
+      </section>
+
+      <!-- AUTHORIZED REPRESENTATIVE -->
+      <section>
+        <h2>Authorized Representative</h2>
+        <p>Provide the details of the person responsible for this registration.</p>
+
+        <label for="representativeName">Full Name *</label>
+        <input type="text" id="representativeName" name="representativeName"
+          placeholder="Enter representative's full name" required>
+
+        <label for="designation">Designation *</label>
+        <input type="text" id="designation" name="designation"
+          placeholder="e.g. Owner, Director, Administrator" required>
+
+        <label for="email">Official Email Address *</label>
+        <input type="email" id="email" name="email"
+          placeholder="Enter official email address" required>
+
+        <label for="phone">Contact Number *</label>
+        <input type="tel" id="phone" name="phone"
+          placeholder="Enter 10-digit mobile number"
+          pattern="[0-9]{10}" maxlength="10" required>
+      </section>
+
+      <!-- LOCATION INFORMATION -->
+      <section>
+        <h2>Location Information</h2>
+        <p>Tell us where your institution is located.</p>
+
+        <label for="city">City *</label>
+        <select id="city" name="city" required>
+          <option value="">Select city</option>
+          <option value="Hojai">Hojai</option>
+          <option value="Guwahati">Guwahati</option>
+          <option value="Other">Other</option>
+        </select>
+
+        <label for="area">Area / Locality *</label>
+        <input type="text" id="area" name="area"
+          placeholder="Enter area or locality" required>
+
+        <label for="address">Complete Institution Address *</label>
+        <textarea id="address" name="address"
+          placeholder="Enter complete address"
+          required></textarea>
+
+        <label for="pincode">PIN Code *</label>
+        <input type="text" id="pincode" name="pincode"
+          placeholder="Enter 6-digit PIN code"
+          pattern="[0-9]{6}" maxlength="6" required>
+      </section>
+
+      <!-- SERVICES -->
+      <section>
+        <h2>Healthcare Services</h2>
+        <p>Tell us about the services available at your institution.</p>
+
+        <label for="specialties">Medical Specialties / Departments *</label>
+        <textarea id="specialties" name="specialties"
+          placeholder="e.g. General Medicine, Cardiology, Pediatrics"
+          required></textarea>
+
+        <label for="doctorsCount">Number of Doctors</label>
+        <input type="number" id="doctorsCount" name="doctorsCount"
+          placeholder="Enter approximate number" min="0">
+
+        <label for="beds">Number of Beds (if applicable)</label>
+        <input type="number" id="beds" name="beds"
+          placeholder="Enter number of beds" min="0">
+
+        <label for="openingHours">Operating Hours</label>
+        <input type="text" id="openingHours" name="openingHours"
+          placeholder="e.g. Monday–Saturday, 9 AM–6 PM">
+      </section>
+
+      <!-- VERIFICATION -->
+      <section>
+        <h2>Institution Verification</h2>
+
+        <p>
+          CareBridge will verify the institution's registration
+          and submitted information before publishing its profile.
+        </p>
+
+        <label class="declaration">
+          <input type="checkbox" id="declaration" required>
+          <span>
+            I confirm that I am authorized to register this institution
+            and that the information provided is accurate.
+          </span>
+        </label>
+      </section>
+
+      <!-- SUBMIT -->
+      <button type="submit" disabled>
+        Registration Submission — Coming Soon
+      </button>
+
+      <p class="form-note">
+        Registration is not yet connected to a secure server.
+        Do not enter real personal or institutional information
+        in this prototype.
+      </p>
+
+    </form>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <p>© 2026 CareBridge. All rights reserved.</p>
+  </footer>
+
+</body>
+</html>
