@@ -1,0 +1,529 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="CareBridge Administration Dashboard">
+  <title>CareBridge Admin Dashboard</title>
+
+  <link rel="stylesheet" href="css/admin.css">
+</head>
+
+<body>
+
+  <div class="admin-layout">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+
+      <div class="sidebar-brand">
+        <span class="brand-icon">✚</span>
+        <div>
+          <h2>CareBridge</h2>
+          <span>Administration</span>
+        </div>
+      </div>
+
+      <div class="sidebar-label">MAIN MENU</div>
+
+      <nav class="admin-nav">
+
+        <button class="nav-item active" data-section="dashboard">
+          <span>▦</span> Dashboard
+        </button>
+
+        <button class="nav-item" data-section="doctors">
+          <span>⚕</span> Doctor Management
+        </button>
+
+        <button class="nav-item" data-section="institutions">
+          <span>✚</span> Clinics & Hospitals
+        </button>
+
+        <button class="nav-item" data-section="patients">
+          <span>♙</span> Patients
+        </button>
+
+        <button class="nav-item" data-section="appointments">
+          <span>▣</span> Appointments
+        </button>
+
+        <button class="nav-item" data-section="payments">
+          <span>₹</span> Payments & Finance
+        </button>
+
+        <button class="nav-item" data-section="verification">
+          <span>✓</span> Verification
+        </button>
+
+        <button class="nav-item" data-section="reviews">
+          <span>☆</span> Reviews & Complaints
+        </button>
+
+        <div class="sidebar-label">PLATFORM MANAGEMENT</div>
+
+        <button class="nav-item" data-section="content">
+          <span>▤</span> Website Content
+        </button>
+
+        <button class="nav-item" data-section="analytics">
+          <span>▥</span> Reports & Analytics
+        </button>
+
+        <button class="nav-item" data-section="notifications">
+          <span>♢</span> Notifications
+        </button>
+
+        <button class="nav-item" data-section="settings">
+          <span>⚙</span> Settings
+        </button>
+
+        <button class="nav-item" data-section="admins">
+          <span>♧</span> Admin Access
+        </button>
+
+      </nav>
+
+      <div class="sidebar-bottom">
+        <div class="admin-profile">
+          <div class="admin-avatar">SA</div>
+          <div>
+            <strong>Super Admin</strong>
+            <span>Website Owner</span>
+          </div>
+        </div>
+
+        <button type="button" id="logoutButton" class="logout-button">
+          ↪ Logout
+        </button>
+      </div>
+
+    </aside>
+
+    <!-- MAIN AREA -->
+    <main class="main-area">
+
+      <header class="topbar">
+
+        <div class="topbar-left">
+          <button type="button" id="menuToggle" class="menu-toggle">
+            ☰
+          </button>
+
+          <div>
+            <h1 id="pageTitle">Dashboard</h1>
+            <p>Manage your CareBridge platform</p>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <a href="index.html" target="_blank" class="view-website">
+            ↗ View Website
+          </a>
+
+          <button type="button" class="notification-button"
+            aria-label="Notifications">
+            ♧
+          </button>
+
+          <div class="topbar-avatar">SA</div>
+        </div>
+
+      </header>
+
+      <div class="content-area">
+
+        <!-- DASHBOARD -->
+        <section class="admin-section active" id="dashboard">
+
+          <div class="welcome-section">
+            <div>
+              <h2>Welcome to CareBridge!</h2>
+              <p>Here is an overview of your healthcare platform.</p>
+            </div>
+            <span class="date-display" id="currentDate"></span>
+          </div>
+
+          <div class="stats-grid">
+
+            <div class="stat-card">
+              <span class="stat-icon">♙</span>
+              <p>Total Patients</p>
+              <h2 id="totalPatients">—</h2>
+              <span>Registered patient accounts</span>
+            </div>
+
+            <div class="stat-card">
+              <span class="stat-icon">⚕</span>
+              <p>Total Doctors</p>
+              <h2 id="totalDoctors">—</h2>
+              <span>Doctor profiles</span>
+            </div>
+
+            <div class="stat-card">
+              <span class="stat-icon">✚</span>
+              <p>Institutions</p>
+              <h2 id="totalInstitutions">—</h2>
+              <span>Clinics and hospitals</span>
+            </div>
+
+            <div class="stat-card">
+              <span class="stat-icon">▣</span>
+              <p>Total Appointments</p>
+              <h2 id="totalAppointments">—</h2>
+              <span>All booking records</span>
+            </div>
+
+          </div>
+
+          <div class="stats-grid secondary-stats">
+
+            <div class="stat-card">
+              <p>Pending Doctor Applications</p>
+              <h2 id="pendingDoctors">—</h2>
+            </div>
+
+            <div class="stat-card">
+              <p>Pending Institution Applications</p>
+              <h2 id="pendingInstitutions">—</h2>
+            </div>
+
+            <div class="stat-card">
+              <p>Pending Appointments</p>
+              <h2 id="pendingAppointments">—</h2>
+            </div>
+
+            <div class="stat-card">
+              <p>Platform Fee Collection</p>
+              <h2 id="platformRevenue">₹—</h2>
+            </div>
+
+          </div>
+
+          <div class="dashboard-grid">
+
+            <div class="panel">
+              <div class="panel-heading">
+                <h3>Recent Applications</h3>
+                <button type="button" class="text-button"
+                  data-open="verification">
+                  View All
+                </button>
+              </div>
+
+              <div class="empty-state">
+                <span>▤</span>
+                <p>Applications will appear here.</p>
+              </div>
+            </div>
+
+            <div class="panel">
+              <div class="panel-heading">
+                <h3>Recent Activity</h3>
+              </div>
+
+              <div class="empty-state">
+                <span>◷</span>
+                <p>Platform activity will appear here.</p>
+              </div>
+            </div>
+
+          </div>
+
+        </section>
+
+        <!-- DOCTORS -->
+        <section class="admin-section" id="doctors">
+          <div class="section-heading">
+            <h2>Doctor Management</h2>
+            <p>Manage independent and institution-managed doctors.</p>
+          </div>
+
+          <div class="filter-bar">
+            <input type="search" placeholder="Search doctor name or Doctor ID..."
+              id="doctorSearch">
+
+            <select id="doctorStatusFilter">
+              <option value="">All Statuses</option>
+              <option value="pending">Pending</option>
+              <option value="approved">Approved</option>
+              <option value="rejected">Rejected</option>
+              <option value="suspended">Suspended</option>
+            </select>
+          </div>
+
+          <div class="panel table-panel">
+            <div class="table-placeholder">
+              Doctor records will appear here after Firebase integration.
+            </div>
+          </div>
+        </section>
+
+        <!-- INSTITUTIONS -->
+        <section class="admin-section" id="institutions">
+          <div class="section-heading">
+            <h2>Clinics & Hospitals</h2>
+            <p>Manage institutions and their registered doctors.</p>
+          </div>
+
+          <div class="filter-bar">
+            <input type="search" placeholder="Search institution..."
+              id="institutionSearch">
+
+            <select id="institutionStatusFilter">
+              <option value="">All Statuses</option>
+              <option value="pending">Pending</option>
+              <option value="approved">Approved</option>
+              <option value="rejected">Rejected</option>
+              <option value="suspended">Suspended</option>
+            </select>
+          </div>
+
+          <div class="panel table-panel">
+            <div class="table-placeholder">
+              Institution records will appear here after Firebase integration.
+            </div>
+          </div>
+        </section>
+
+        <!-- PATIENTS -->
+        <section class="admin-section" id="patients">
+          <div class="section-heading">
+            <h2>Patient Management</h2>
+            <p>Manage patient accounts and account activity.</p>
+          </div>
+
+          <div class="filter-bar">
+            <input type="search" placeholder="Search patient name or email..."
+              id="patientSearch">
+          </div>
+
+          <div class="panel table-panel">
+            <div class="table-placeholder">
+              Patient records will appear here after Firebase integration.
+            </div>
+          </div>
+        </section>
+
+        <!-- APPOINTMENTS -->
+        <section class="admin-section" id="appointments">
+          <div class="section-heading">
+            <h2>Appointment Management</h2>
+            <p>Monitor bookings, cancellations and appointment history.</p>
+          </div>
+
+          <div class="filter-bar">
+            <input type="search" placeholder="Search appointment..."
+              id="appointmentSearch">
+
+            <select id="appointmentStatusFilter">
+              <option value="">All Appointments</option>
+              <option value="pending">Pending</option>
+              <option value="confirmed">Confirmed</option>
+              <option value="completed">Completed</option>
+              <option value="cancelled">Cancelled</option>
+            </select>
+          </div>
+
+          <div class="panel table-panel">
+            <div class="table-placeholder">
+              Appointment records will appear here after Firebase integration.
+            </div>
+          </div>
+        </section>
+
+        <!-- PAYMENTS -->
+        <section class="admin-section" id="payments">
+          <div class="section-heading">
+            <h2>Payments & Finance</h2>
+            <p>Monitor platform fees, refunds, gateway charges and payouts.</p>
+          </div>
+
+          <div class="stats-grid">
+            <div class="stat-card">
+              <p>Gross Platform Fees</p>
+              <h2 id="grossPlatformFees">₹—</h2>
+            </div>
+            <div class="stat-card">
+              <p>Gateway Charges</p>
+              <h2 id="gatewayCharges">₹—</h2>
+            </div>
+            <div class="stat-card">
+              <p>Refunds</p>
+              <h2 id="totalRefunds">₹—</h2>
+            </div>
+            <div class="stat-card">
+              <p>Net Platform Revenue</p>
+              <h2 id="netPlatformRevenue">₹—</h2>
+            </div>
+          </div>
+
+          <div class="panel table-panel">
+            <div class="table-placeholder">
+              Payment and payout records will appear here after integration.
+            </div>
+          </div>
+        </section>
+
+        <!-- VERIFICATION -->
+        <section class="admin-section" id="verification">
+          <div class="section-heading">
+            <h2>Verification Centre</h2>
+            <p>Review professional documents and institution credentials.</p>
+          </div>
+
+          <div class="filter-bar">
+            <select id="verificationType">
+              <option value="">All Applications</option>
+              <option value="doctor">Doctor Applications</option>
+              <option value="clinic">Institution Applications</option>
+            </select>
+
+            <select id="verificationStatus">
+              <option value="pending">Pending Review</option>
+              <option value="approved">Approved</option>
+              <option value="rejected">Rejected</option>
+            </select>
+          </div>
+
+          <div class="panel table-panel">
+            <div class="table-placeholder">
+              Verification applications will appear here after integration.
+            </div>
+          </div>
+        </section>
+
+        <!-- REVIEWS -->
+        <section class="admin-section" id="reviews">
+          <div class="section-heading">
+            <h2>Reviews & Complaints</h2>
+            <p>Review patient feedback, reports and complaints.</p>
+          </div>
+
+          <div class="panel table-panel">
+            <div class="table-placeholder">
+              Reviews and complaints will appear here after integration.
+            </div>
+          </div>
+        </section>
+
+        <!-- CONTENT -->
+        <section class="admin-section" id="content">
+          <div class="section-heading">
+            <h2>Website Content</h2>
+            <p>Manage public website information and content.</p>
+          </div>
+
+          <div class="management-grid">
+            <div class="management-card">
+              <h3>Medical Specialties</h3>
+              <p>Manage the specialties displayed on CareBridge.</p>
+            </div>
+            <div class="management-card">
+              <h3>Cities & Locations</h3>
+              <p>Manage supported cities and service areas.</p>
+            </div>
+            <div class="management-card">
+              <h3>Banners & Announcements</h3>
+              <p>Manage homepage banners and announcements.</p>
+            </div>
+            <div class="management-card">
+              <h3>Public Information</h3>
+              <p>Manage About Us and other public content.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ANALYTICS -->
+        <section class="admin-section" id="analytics">
+          <div class="section-heading">
+            <h2>Reports & Analytics</h2>
+            <p>Monitor the growth and performance of CareBridge.</p>
+          </div>
+
+          <div class="panel">
+            <div class="empty-state">
+              <span>▥</span>
+              <p>Registration, booking and revenue reports will appear here.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- NOTIFICATIONS -->
+        <section class="admin-section" id="notifications">
+          <div class="section-heading">
+            <h2>Notifications</h2>
+            <p>Manage platform announcements and user notifications.</p>
+          </div>
+
+          <div class="panel">
+            <div class="empty-state">
+              <span>♢</span>
+              <p>Notification management will be connected later.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- SETTINGS -->
+        <section class="admin-section" id="settings">
+          <div class="section-heading">
+            <h2>Platform Settings</h2>
+            <p>Manage CareBridge platform configuration and policies.</p>
+          </div>
+
+          <div class="management-grid">
+            <div class="management-card">
+              <h3>General Settings</h3>
+              <p>Platform name, contact details and operating settings.</p>
+            </div>
+            <div class="management-card">
+              <h3>Booking Policies</h3>
+              <p>Appointment rules and cancellation policies.</p>
+            </div>
+            <div class="management-card">
+              <h3>Payment Settings</h3>
+              <p>Platform fee and payment configuration.</p>
+            </div>
+            <div class="management-card">
+              <h3>Security Settings</h3>
+              <p>Authentication and access control.</p>
+            </div>
+          </div>
+        </section>
+
+        <!-- ADMIN ACCESS -->
+        <section class="admin-section" id="admins">
+          <div class="section-heading">
+            <h2>Admin Access</h2>
+            <p>Manage people authorized to access the central admin website.</p>
+          </div>
+
+          <div class="panel">
+            <h3>Administrator Accounts</h3>
+            <p>
+              Your Super Admin account will have full control.
+              Trusted administrators can be added later with individually
+              assigned permissions.
+            </p>
+
+            <div class="table-placeholder">
+              Admin access management will be connected securely later.
+            </div>
+          </div>
+        </section>
+
+      </div>
+
+      <footer class="admin-footer">
+        CareBridge Administration · © 2026 CareBridge
+      </footer>
+
+    </main>
+
+  </div>
+
+  <script type="module" src="js/admin.js"></script>
+
+</body>
+</html>
