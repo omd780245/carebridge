@@ -1,0 +1,404 @@
+
+/* ==============================
+   CAREBRIDGE - CLINICS DIRECTORY
+================================ */
+
+:root {
+  --primary: #087f72;
+  --primary-dark: #05665d;
+  --primary-light: #e9f7f4;
+  --text: #183b38;
+  --muted: #718581;
+  --border: #dce9e6;
+  --background: #f5faf9;
+  --white: #ffffff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: Arial, Helvetica, sans-serif;
+  background: var(--background);
+  color: var(--text);
+  line-height: 1.6;
+}
+
+/* HEADER */
+
+.directory-header {
+  width: 100%;
+  padding: 16px 20px;
+  background: var(--white);
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.header-inner {
+  max-width: 1100px;
+  margin: auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 15px;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--primary);
+  font-size: 22px;
+  font-weight: 800;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.brand .logo {
+  font-size: 25px;
+}
+
+.back-link {
+  padding: 10px 16px;
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: 9px;
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.back-link:hover {
+  background: var(--primary);
+  color: white;
+}
+
+/* MAIN */
+
+main {
+  width: 100%;
+  max-width: 1100px;
+  margin: auto;
+  padding: 0 20px;
+}
+
+/* HERO */
+
+.directory-hero {
+  padding: 65px 0 45px;
+  text-align: center;
+}
+
+.eyebrow {
+  display: inline-block;
+  padding: 6px 13px;
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 1px;
+}
+
+.directory-hero h1 {
+  margin: 17px 0 12px;
+  font-size: 38px;
+  line-height: 1.2;
+  color: var(--text);
+}
+
+.directory-hero p {
+  max-width: 650px;
+  margin: auto;
+  color: var(--muted);
+  font-size: 16px;
+}
+
+/* SEARCH SECTION */
+
+.search-section {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 10px 30px rgba(20, 70, 62, 0.05);
+}
+
+.search-heading h2 {
+  font-size: 21px;
+  margin-bottom: 5px;
+}
+
+.search-heading p {
+  color: var(--muted);
+  font-size: 14px;
+  margin-bottom: 22px;
+}
+
+.search-fields {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 18px;
+}
+
+.field label {
+  display: block;
+  margin-bottom: 7px;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.field select {
+  width: 100%;
+  min-height: 49px;
+  padding: 12px;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  background: #fbfefd;
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+}
+
+.field select:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 3px rgba(8, 127, 114, 0.10);
+}
+
+.search-note {
+  margin-top: 15px;
+  color: var(--muted);
+  font-size: 12px;
+}
+
+/* DIRECTORY RESULTS */
+
+.directory-results {
+  padding: 55px 0;
+}
+
+.results-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 22px;
+}
+
+.results-heading h2 {
+  font-size: 23px;
+}
+
+.results-heading p {
+  color: var(--muted);
+  font-size: 14px;
+  margin-top: 4px;
+}
+
+.result-count {
+  padding: 7px 13px;
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+/* EMPTY STATE */
+
+.empty-state {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 55px 25px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(20, 70, 62, 0.04);
+}
+
+.empty-icon {
+  width: 65px;
+  height: 65px;
+  margin: 0 auto 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--primary-light);
+  color: var(--primary);
+  border-radius: 18px;
+  font-size: 30px;
+}
+
+.empty-state h3 {
+  font-size: 22px;
+  margin-bottom: 10px;
+}
+
+.empty-state p {
+  max-width: 580px;
+  margin: 0 auto 24px;
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* BUTTONS */
+
+.primary-button,
+.partner-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 13px 22px;
+  border-radius: 10px;
+  background: var(--primary);
+  color: white;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 700;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.primary-button:hover,
+.partner-button:hover {
+  background: var(--primary-dark);
+  transform: translateY(-2px);
+}
+
+/* PARTNER SECTION */
+
+.partner-section {
+  margin-bottom: 60px;
+  padding: 35px;
+  background: #eaf7f4;
+  border: 1px solid #d6ece6;
+  border-radius: 18px;
+}
+
+.partner-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px;
+}
+
+.partner-content h2 {
+  margin: 12px 0 8px;
+  font-size: 25px;
+}
+
+.partner-content p {
+  color: var(--muted);
+  font-size: 14px;
+}
+
+/* FOOTER */
+
+footer {
+  background: #123d38;
+  color: white;
+  padding: 35px 20px;
+  text-align: center;
+}
+
+.footer-brand {
+  color: white;
+  font-size: 22px;
+  font-weight: 800;
+  text-decoration: none;
+}
+
+.footer-inner > p {
+  color: #d0e3df;
+  font-size: 13px;
+  margin-top: 9px;
+}
+
+.footer-inner .copyright {
+  margin-top: 22px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255,255,255,0.15);
+  font-size: 12px;
+}
+
+/* MOBILE RESPONSIVENESS */
+
+@media (max-width: 600px) {
+
+  .directory-header {
+    padding: 14px 12px;
+  }
+
+  .brand {
+    font-size: 19px;
+  }
+
+  .back-link {
+    padding: 9px 10px;
+    font-size: 12px;
+  }
+
+  main {
+    padding: 0 14px;
+  }
+
+  .directory-hero {
+    padding: 45px 0 30px;
+  }
+
+  .directory-hero h1 {
+    font-size: 28px;
+  }
+
+  .directory-hero p {
+    font-size: 14px;
+  }
+
+  .search-section {
+    padding: 20px 16px;
+  }
+
+  .search-fields {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .results-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .empty-state {
+    padding: 40px 18px;
+  }
+
+  .empty-state h3 {
+    font-size: 19px;
+  }
+
+  .partner-section {
+    padding: 25px 20px;
+  }
+
+  .partner-content {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .partner-content h2 {
+    font-size: 21px;
+  }
+
+  .partner-button {
+    width: 100%;
+  }
+}
