@@ -1,14 +1,227 @@
 
-document.addEventListener("DOMContentLoaded", function () {
+import {
+  signInWithEmailAndPassword,
+  onAuthStateChanged,
+  signOut,
+} from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
 
-  // ELEMENTS
+import { auth, authPersistence, db } from "./firebase.js";
+
+import {
+  ref,
+  get
+} from "https://www.gstatic.com/firebasejs/13.2.0/firebase-database.js";
+
+document.addEventListener("DOMContentLoaded", async function () {
+
+  // ==========================================
+  // LOGIN ELEMENTS
+  // ==========================================
+
+  const loginScreen = document.getElementById("adminLoginScreen");
+  const adminLayout = document.getElementById("adminLayout");
+  const loginForm = document.getElementById("adminLoginForm");
+  const emailInput = document.getElementById("adminEmail");
+  const passwordInput = document.getElementById("adminPassword");
+  const loginButton = document.getElementById("adminLoginButton");
+  const loginMessage = document.getElementById("adminLoginMessage");
+
+  const logoutButton = document.getElementById("logoutButton");
+
+  // ==========================================
+  // LOGIN MESSAGE
+  // ==========================================
+
+  /**
+ * @param {string} message
+ */
+function showLoginMessage(message) {
+    if (loginMessage) {
+      loginMessage.textContent = message;
+    }
+  }
+
+  // ==========================================
+  // SHOW LOGIN SCREEN
+  // ==========================================
+
+  function showLoginScreen() {
+    if (loginScreen) {
+      loginScreen.hidden = false;
+    }
+
+    if (adminLayout) {
+      adminLayout.hidden = true;
+    }
+  }
+
+  // ==========================================
+  // SHOW ADMIN DASHBOARD
+  // ==========================================
+
+  function showAdminDashboard() {
+    if (loginScreen) {
+      loginScreen.hidden = true;
+    }
+
+    if (adminLayout) {
+      adminLayout.hidden = false;
+    }
+
+    showSection("dashboard");
+  }
+
+  // ==========================================
+  // FIREBASE AUTHENTICATION STATE
+  // ==========================================
+
+  showLoginScreen();
+
+  try {
+    await authPersistence;
+
+    /**
+ * @param {any} user
+ */
+/**
+ * @param {any} user
+ */
+onAuthStateChanged(auth, async function (/** @type {any} */ user) {
+
+      if (!user) {
+        showLoginScreen();
+        return;
+      }
+
+      try {
+        // Read the authenticated user's administrator record.
+const adminRef = ref(db, "admins/" + user.uid);
+const adminSnapshot = await get(adminRef);
+
+if (!adminSnapshot.exists()) {
+  await signOut(auth);
+  showLoginScreen();
+
+  showLoginMessage(
+    "This account does not have administrator permission."
+  );
+
+  return;
+}
+
+const adminData = adminSnapshot.val();
+
+const isAuthorizedAdmin =
+  adminData.role === "super_admin" &&
+  adminData.status === "active";
+
+if (!isAuthorizedAdmin) {
+  await signOut(auth);
+  showLoginScreen();
+
+  showLoginMessage(
+    "Administrator access is inactive or unauthorized."
+  );
+
+  return;
+}
+
+showAdminDashboard();
+
+      } catch (error) {
+        console.error("Admin authorization error:", error);
+
+        await signOut(auth);
+        showLoginScreen();
+
+        showLoginMessage(
+          "Unable to verify administrator permission. Please try again."
+        );
+      }
+
+    });
+
+  } catch (error) {
+    console.error("Firebase initialization error:", error);
+
+    showLoginScreen();
+
+    showLoginMessage(
+      "Firebase could not initialize. Please refresh the page."
+    );
+  }
+
+  // ==========================================
+  // ADMIN LOGIN FORM
+  // ==========================================
+
+  if (loginForm) {
+
+    loginForm.addEventListener("submit", async function (event) {
+
+      event.preventDefault();
+
+      const email = emailInput.value.trim();
+      const password = passwordInput.value;
+
+      if (!email || !password) {
+        showLoginMessage("Please enter your email and password.");
+        return;
+      }
+
+      loginButton.disabled = true;
+      loginButton.textContent = "Signing in...";
+      showLoginMessage("");
+
+      try {
+        await authPersistence;
+
+        await signInWithEmailAndPassword(
+          auth,
+          email,
+          password
+        );
+
+        // Authorization is checked by onAuthStateChanged.
+        // Signing in alone does not grant admin access.
+
+      } catch (error) {
+        console.error("Admin login error:", error);
+
+        if (error.code === "auth/invalid-credential") {
+          showLoginMessage("Incorrect email or password.");
+        } else if (error.code === "auth/too-many-requests") {
+          showLoginMessage("Too many attempts. Try again later.");
+        } else if (error.code === "auth/network-request-failed") {
+          showLoginMessage("Network error. Check your internet connection.");
+        } else {
+          showLoginMessage("Login failed. Please try again.");
+        }
+
+      } finally {
+        loginButton.disabled = false;
+        loginButton.textContent = "Sign In to Dashboard";
+      }
+
+    });
+
+  }
+
+  // ==========================================
+  // ADMIN DASHBOARD ELEMENTS
+  // ==========================================
+
   const sidebar = document.getElementById("sidebar");
   const menuToggle = document.getElementById("menuToggle");
-  const navItems = document.querySelectorAll(".nav-item");
-  const sections = document.querySelectorAll(".admin-section");
   const pageTitle = document.getElementById("pageTitle");
 
+  const navItems = document.querySelectorAll(".nav-item");
+  const sections = document.querySelectorAll(".admin-section");
+
+  // ==========================================
   // SECTION TITLES
+  // ==========================================
+
   const sectionTitles = {
     dashboard: "Dashboard",
     doctors: "Doctor Management",
@@ -25,27 +238,32 @@ document.addEventListener("DOMContentLoaded", function () {
     admins: "Admin Access"
   };
 
+  // ==========================================
   // SHOW SELECTED SECTION
+  // ==========================================
+
+  /**
+   * @param {string} sectionId
+   */
   function showSection(sectionId) {
 
     const selectedSection = document.getElementById(sectionId);
 
-    if (!selectedSection) return;
+    if (!selectedSection) {
+      console.warn("Admin section not found:", sectionId);
+      return;
+    }
 
-    // Hide all sections
     sections.forEach(function (section) {
       section.classList.remove("active");
     });
 
-    // Remove active navigation style
     navItems.forEach(function (item) {
       item.classList.remove("active");
     });
 
-    // Show selected section
     selectedSection.classList.add("active");
 
-    // Highlight selected navigation item
     const activeItem = document.querySelector(
       '.nav-item[data-section="' + sectionId + '"]'
     );
@@ -54,25 +272,35 @@ document.addEventListener("DOMContentLoaded", function () {
       activeItem.classList.add("active");
     }
 
-    // Update page title
-    pageTitle.textContent = sectionTitles[sectionId] || "Dashboard";
+    if (pageTitle) {
+      pageTitle.textContent =
+        sectionTitles[sectionId] || "Dashboard";
+    }
 
-    // Close mobile sidebar
-    sidebar.classList.remove("open");
+    if (sidebar) {
+      sidebar.classList.remove("open");
+    }
 
-    // Scroll to top
     window.scrollTo({
       top: 0,
       behavior: "smooth"
     });
   }
 
+  // ==========================================
   // NAVIGATION EVENTS
+  // ==========================================
+
   navItems.forEach(function (item) {
 
     item.addEventListener("click", function () {
 
       const sectionId = item.dataset.section;
+
+      if (!sectionId) {
+        console.warn("Navigation item has no data-section.");
+        return;
+      }
 
       showSection(sectionId);
 
@@ -80,45 +308,82 @@ document.addEventListener("DOMContentLoaded", function () {
 
   });
 
+  // ==========================================
   // DASHBOARD QUICK LINKS
-  document.querySelectorAll("[data-open]").forEach(function (button) {
+  // ==========================================
+
+  const quickLinks = document.querySelectorAll("[data-open]");
+
+  quickLinks.forEach(function (button) {
 
     button.addEventListener("click", function () {
 
-      showSection(button.dataset.open);
+      const sectionId = button.dataset.open;
+
+      if (!sectionId) {
+        console.warn("Quick link has no data-open value.");
+        return;
+      }
+
+      showSection(sectionId);
 
     });
 
   });
 
+  // ==========================================
   // MOBILE SIDEBAR TOGGLE
-  if (menuToggle) {
+  // ==========================================
+
+  if (menuToggle && sidebar) {
 
     menuToggle.addEventListener("click", function () {
 
-      sidebar.classList.toggle("open");
+      const isOpen = sidebar.classList.toggle("open");
+
+      menuToggle.setAttribute(
+        "aria-expanded",
+        String(isOpen)
+      );
+
+      menuToggle.setAttribute(
+        "aria-label",
+        isOpen ? "Close sidebar" : "Open sidebar"
+      );
 
     });
 
   }
 
+  // ==========================================
   // CLOSE SIDEBAR WHEN CLICKING OUTSIDE
+  // ==========================================
+
   document.addEventListener("click", function (event) {
+
+    if (!sidebar || !menuToggle) return;
 
     if (
       window.innerWidth <= 760 &&
       sidebar.classList.contains("open") &&
+      event.target instanceof Node &&
       !sidebar.contains(event.target) &&
       !menuToggle.contains(event.target)
     ) {
 
       sidebar.classList.remove("open");
 
+      menuToggle.setAttribute("aria-expanded", "false");
+      menuToggle.setAttribute("aria-label", "Open sidebar");
+
     }
 
   });
 
+  // ==========================================
   // CURRENT DATE
+  // ==========================================
+
   const currentDate = document.getElementById("currentDate");
 
   if (currentDate) {
@@ -134,22 +399,31 @@ document.addEventListener("DOMContentLoaded", function () {
 
   }
 
-  // LOGOUT PLACEHOLDER
-  const logoutButton = document.getElementById("logoutButton");
+  // ==========================================
+  // ADMIN LOGOUT
+  // ==========================================
 
   if (logoutButton) {
 
-    logoutButton.addEventListener("click", function () {
+    logoutButton.addEventListener("click", async function () {
 
-      alert(
-        "Admin authentication is not connected yet. Logout will be enabled after Firebase admin authentication is implemented."
-      );
+      try {
+        await signOut(auth);
+        showLoginMessage("You have been signed out.");
+
+      } catch (error) {
+        console.error("Logout error:", error);
+        alert("Unable to sign out. Please try again.");
+      }
 
     });
 
   }
 
+  // ==========================================
   // SEARCH INPUT PREPARATION
+  // ==========================================
+
   const searchInputs = [
     "doctorSearch",
     "institutionSearch",
@@ -164,17 +438,15 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!input) return;
 
     input.addEventListener("input", function () {
-
-      // Firebase search will be connected later.
-      console.log(
-        "Search entered in " + inputId + ": " + input.value
-      );
-
+      // Database search will be connected later.
     });
 
   });
 
+  // ==========================================
   // STATUS FILTER PREPARATION
+  // ==========================================
+
   const filterIds = [
     "doctorStatusFilter",
     "institutionStatusFilter",
@@ -190,17 +462,9 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!filter) return;
 
     filter.addEventListener("change", function () {
-
       // Database filtering will be connected later.
-      console.log(
-        "Filter changed: " + filterId + " = " + filter.value
-      );
-
     });
 
   });
-
-  // INITIAL SECTION
-  showSection("dashboard");
 
 });
