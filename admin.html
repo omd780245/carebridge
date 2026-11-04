@@ -11,8 +11,72 @@
 </head>
 
 <body>
+  
+<!-- ADMIN LOGIN SCREEN -->
 
-  <div class="admin-layout">
+<div class="admin-login-screen" id="adminLoginScreen">
+
+  <div class="admin-login-card">
+
+    <div class="admin-login-logo">✚</div>
+
+    <h1>CareBridge</h1>
+
+    <p class="admin-login-subtitle">
+      Administration Portal
+    </p>
+
+    <div class="admin-login-heading">
+      <h2>Admin Login</h2>
+      <p>Sign in to manage your CareBridge platform.</p>
+    </div>
+
+    <form id="adminLoginForm">
+
+      <div class="admin-login-field">
+
+        <label for="adminEmail">Email Address</label>
+
+        <input
+          type="email"
+          id="adminEmail"
+          placeholder="Enter admin email"
+          autocomplete="username"
+          required>
+
+      </div>
+
+      <div class="admin-login-field">
+
+        <label for="adminPassword">Password</label>
+
+        <input
+          type="password"
+          id="adminPassword"
+          placeholder="Enter your password"
+          autocomplete="current-password"
+          required>
+
+      </div>
+
+      <button type="submit" id="adminLoginButton">
+        Sign In to Dashboard
+      </button>
+
+      <p id="adminLoginMessage" role="status"></p>
+
+    </form>
+
+    <div class="admin-login-footer">
+      Secure CareBridge Administration
+    </div>
+
+  </div>
+
+</div>
+
+
+  <div class="admin-layout" id="adminLayout" hidden>
 
     <!-- SIDEBAR -->
     <aside class="sidebar" id="sidebar">
@@ -345,6 +409,47 @@
               <p>Gross Platform Fees</p>
               <h2 id="grossPlatformFees">₹—</h2>
             </div>
+            
+<!-- EMERGENCY PAYMENT CONTROL -->
+<div class="panel payment-control-panel">
+  <div class="payment-control-header">
+    <div>
+      <h3>Emergency Payment Control</h3>
+      <p>
+        Temporarily stop new payment orders if suspicious
+        activity or a security incident is detected.
+      </p>
+    </div>
+    <span class="payment-status-badge" id="paymentStatusBadge">
+      Status: Not Connected
+    </span>
+  </div>
+
+  <div class="payment-control-actions">
+    <button
+      type="button"
+      id="disablePaymentsButton"
+      class="payment-disable-button"
+      disabled
+    >
+      Disable New Payments
+    </button>
+
+    <button
+      type="button"
+      id="enablePaymentsButton"
+      class="payment-enable-button"
+      disabled
+    >
+      Enable New Payments
+    </button>
+  </div>
+
+  <p class="payment-control-note" id="paymentControlMessage">
+    Payment controls will become available after secure backend integration.
+  </p>
+</div>
+
             <div class="stat-card">
               <p>Gateway Charges</p>
               <h2 id="gatewayCharges">₹—</h2>
@@ -521,7 +626,7 @@
 
     </main>
 
-  </div>
+  </>
 
   <script type="module" src="js/admin.js"></script>
 
