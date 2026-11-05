@@ -1,0 +1,226 @@
+
+/* =================================
+   CAREBRIDGE PATIENT DASHBOARD
+================================= */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background: #f4f8fb;
+  color: #193047;
+  min-height: 100vh;
+}
+
+/* HEADER */
+
+header {
+  background: linear-gradient(135deg, #087f8c, #086b85);
+  color: white;
+  padding: 18px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.08);
+}
+
+header h2 {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+}
+
+/* BUTTONS */
+
+button {
+  border: none;
+  border-radius: 8px;
+  padding: 11px 18px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.2s ease;
+}
+
+#logoutButton {
+  background: white;
+  color: #087f8c;
+}
+
+#logoutButton:hover {
+  background: #e8f7f8;
+  transform: translateY(-1px);
+}
+
+/* MAIN CONTAINER */
+
+main {
+  max-width: 1000px;
+  width: 100%;
+  margin: 35px auto;
+  padding: 0 20px;
+}
+
+/* WELCOME SECTION */
+
+.welcome {
+  margin-bottom: 28px;
+}
+
+.welcome h1 {
+  font-size: 28px;
+  margin-bottom: 9px;
+  color: #193047;
+}
+
+.welcome p {
+  color: #718096;
+  font-size: 15px;
+}
+
+/* DASHBOARD CARDS */
+
+.card {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 14px;
+  margin-bottom: 22px;
+  border: 1px solid #e9f0f4;
+  box-shadow: 0 5px 20px rgba(20, 60, 80, 0.05);
+  transition: box-shadow 0.2s ease;
+}
+
+.card:hover {
+  box-shadow: 0 8px 25px rgba(20, 60, 80, 0.08);
+}
+
+.card h3 {
+  font-size: 19px;
+  margin-bottom: 20px;
+  color: #087f8c;
+}
+
+/* PROFILE DETAILS */
+
+.detail {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 15px 0;
+  border-bottom: 1px solid #edf1f4;
+  overflow-wrap: anywhere;
+}
+
+.detail:last-child {
+  border-bottom: none;
+}
+
+.detail strong {
+  width: 120px;
+  flex-shrink: 0;
+  color: #536779;
+  font-size: 14px;
+}
+
+.detail span {
+  color: #193047;
+  font-size: 14px;
+}
+
+/* ACCOUNT STATUS */
+
+.status {
+  display: inline-block;
+  background: #e6f7ef;
+  color: #147a4b !important;
+  padding: 6px 13px;
+  border-radius: 20px;
+  font-size: 12px !important;
+  font-weight: 700;
+  text-transform: capitalize;
+}
+
+/* APPOINTMENT SECTION */
+
+.card p {
+  color: #64748b;
+  line-height: 1.6;
+  font-size: 14px;
+}
+
+/* ERROR MESSAGE */
+
+#message {
+  padding: 15px;
+  color: #d93025;
+  text-align: center;
+  font-size: 14px;
+}
+
+/* TABLET */
+
+@media (max-width: 768px) {
+  main {
+    margin: 25px auto;
+  }
+
+  .welcome h1 {
+    font-size: 25px;
+  }
+
+  .card {
+    padding: 21px;
+  }
+}
+
+/* MOBILE */
+
+@media (max-width: 500px) {
+  header {
+    padding: 16px;
+  }
+
+  header h2 {
+    font-size: 19px;
+  }
+
+  main {
+    margin: 23px auto;
+    padding: 0 14px;
+  }
+
+  .welcome h1 {
+    font-size: 23px;
+  }
+
+  .card {
+    padding: 19px;
+    border-radius: 12px;
+  }
+
+  .card h3 {
+    font-size: 17px;
+  }
+
+  .detail {
+    display: block;
+  }
+
+  .detail strong {
+    display: block;
+    width: auto;
+    margin-bottom: 7px;
+  }
+
+  .detail span {
+    display: inline-block;
+  }
+
+  #logoutButton {
+    padding: 9px 13px;
+    font-size: 12px;
+  }
+}
