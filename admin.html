@@ -1,6 +1,7 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,71 +12,66 @@
 </head>
 
 <body>
-  
-<!-- ADMIN LOGIN SCREEN -->
 
-<div class="admin-login-screen" id="adminLoginScreen">
+  <!-- ADMIN LOGIN SCREEN -->
+  <div class="admin-login-screen" id="adminLoginScreen">
 
-  <div class="admin-login-card">
+    <div class="admin-login-card">
 
-    <div class="admin-login-logo">✚</div>
+      <div class="admin-login-logo">✚</div>
 
-    <h1>CareBridge</h1>
+      <h1>CareBridge</h1>
 
-    <p class="admin-login-subtitle">
-      Administration Portal
-    </p>
+      <p class="admin-login-subtitle">
+        Administration Portal
+      </p>
 
-    <div class="admin-login-heading">
-      <h2>Admin Login</h2>
-      <p>Sign in to manage your CareBridge platform.</p>
-    </div>
-
-    <form id="adminLoginForm">
-
-      <div class="admin-login-field">
-
-        <label for="adminEmail">Email Address</label>
-
-        <input
-          type="email"
-          id="adminEmail"
-          placeholder="Enter admin email"
-          autocomplete="username"
-          required>
-
+      <div class="admin-login-heading">
+        <h2>Admin Login</h2>
+        <p>Sign in to manage your CareBridge platform.</p>
       </div>
 
-      <div class="admin-login-field">
+      <form id="adminLoginForm">
 
-        <label for="adminPassword">Password</label>
+        <div class="admin-login-field">
+          <label for="adminEmail">Email Address</label>
 
-        <input
-          type="password"
-          id="adminPassword"
-          placeholder="Enter your password"
-          autocomplete="current-password"
-          required>
+          <input
+            type="email"
+            id="adminEmail"
+            placeholder="Enter admin email"
+            autocomplete="username"
+            required>
+        </div>
 
+        <div class="admin-login-field">
+          <label for="adminPassword">Password</label>
+
+          <input
+            type="password"
+            id="adminPassword"
+            placeholder="Enter your password"
+            autocomplete="current-password"
+            required>
+        </div>
+
+        <button type="submit" id="adminLoginButton">
+          Sign In to Dashboard
+        </button>
+
+        <p id="adminLoginMessage" role="status"></p>
+
+      </form>
+
+      <div class="admin-login-footer">
+        Secure CareBridge Administration
       </div>
 
-      <button type="submit" id="adminLoginButton">
-        Sign In to Dashboard
-      </button>
-
-      <p id="adminLoginMessage" role="status"></p>
-
-    </form>
-
-    <div class="admin-login-footer">
-      Secure CareBridge Administration
     </div>
-
   </div>
 
-</div>
 
-
+  <!-- ADMIN LAYOUT -->
   <div class="admin-layout" id="adminLayout" hidden>
 
     <!-- SIDEBAR -->
@@ -83,6 +79,7 @@
 
       <div class="sidebar-brand">
         <span class="brand-icon">✚</span>
+
         <div>
           <h2>CareBridge</h2>
           <span>Administration</span>
@@ -150,28 +147,42 @@
       </nav>
 
       <div class="sidebar-bottom">
+
         <div class="admin-profile">
           <div class="admin-avatar">SA</div>
+
           <div>
             <strong>Super Admin</strong>
             <span>Website Owner</span>
           </div>
         </div>
 
-        <button type="button" id="logoutButton" class="logout-button">
+        <button
+          type="button"
+          id="logoutButton"
+          class="logout-button">
           ↪ Logout
         </button>
+
       </div>
 
     </aside>
 
+
     <!-- MAIN AREA -->
     <main class="main-area">
 
+      <!-- TOPBAR -->
       <header class="topbar">
 
         <div class="topbar-left">
-          <button type="button" id="menuToggle" class="menu-toggle">
+
+          <button
+            type="button"
+            id="menuToggle"
+            class="menu-toggle"
+            aria-label="Open sidebar"
+            aria-expanded="false">
             ☰
           </button>
 
@@ -179,35 +190,50 @@
             <h1 id="pageTitle">Dashboard</h1>
             <p>Manage your CareBridge platform</p>
           </div>
+
         </div>
 
         <div class="topbar-right">
-          <a href="index.html" target="_blank" class="view-website">
+
+          <a
+            href="index.html"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="view-website">
             ↗ View Website
           </a>
 
-          <button type="button" class="notification-button"
+          <button
+            type="button"
+            class="notification-button"
             aria-label="Notifications">
             ♧
           </button>
 
           <div class="topbar-avatar">SA</div>
+
         </div>
 
       </header>
 
+
+      <!-- CONTENT AREA -->
       <div class="content-area">
 
         <!-- DASHBOARD -->
         <section class="admin-section active" id="dashboard">
 
           <div class="welcome-section">
+
             <div>
               <h2>Welcome to CareBridge!</h2>
               <p>Here is an overview of your healthcare platform.</p>
             </div>
+
             <span class="date-display" id="currentDate"></span>
+
           </div>
+
 
           <div class="stats-grid">
 
@@ -241,6 +267,7 @@
 
           </div>
 
+
           <div class="stats-grid secondary-stats">
 
             <div class="stat-card">
@@ -265,12 +292,17 @@
 
           </div>
 
+
           <div class="dashboard-grid">
 
             <div class="panel">
+
               <div class="panel-heading">
                 <h3>Recent Applications</h3>
-                <button type="button" class="text-button"
+
+                <button
+                  type="button"
+                  class="text-button"
                   data-open="verification">
                   View All
                 </button>
@@ -280,9 +312,12 @@
                 <span>▤</span>
                 <p>Applications will appear here.</p>
               </div>
+
             </div>
 
+
             <div class="panel">
+
               <div class="panel-heading">
                 <h3>Recent Activity</h3>
               </div>
@@ -291,21 +326,27 @@
                 <span>◷</span>
                 <p>Platform activity will appear here.</p>
               </div>
+
             </div>
 
           </div>
 
         </section>
 
+
         <!-- DOCTORS -->
         <section class="admin-section" id="doctors">
+
           <div class="section-heading">
             <h2>Doctor Management</h2>
             <p>Manage independent and institution-managed doctors.</p>
           </div>
 
           <div class="filter-bar">
-            <input type="search" placeholder="Search doctor name or Doctor ID..."
+
+            <input
+              type="search"
+              placeholder="Search doctor name or Doctor ID..."
               id="doctorSearch">
 
             <select id="doctorStatusFilter">
@@ -315,6 +356,7 @@
               <option value="rejected">Rejected</option>
               <option value="suspended">Suspended</option>
             </select>
+
           </div>
 
           <div class="panel table-panel">
@@ -322,17 +364,23 @@
               Doctor records will appear here after Firebase integration.
             </div>
           </div>
+
         </section>
+
 
         <!-- INSTITUTIONS -->
         <section class="admin-section" id="institutions">
+
           <div class="section-heading">
             <h2>Clinics & Hospitals</h2>
             <p>Manage institutions and their registered doctors.</p>
           </div>
 
           <div class="filter-bar">
-            <input type="search" placeholder="Search institution..."
+
+            <input
+              type="search"
+              placeholder="Search institution..."
               id="institutionSearch">
 
             <select id="institutionStatusFilter">
@@ -342,6 +390,7 @@
               <option value="rejected">Rejected</option>
               <option value="suspended">Suspended</option>
             </select>
+
           </div>
 
           <div class="panel table-panel">
@@ -349,17 +398,22 @@
               Institution records will appear here after Firebase integration.
             </div>
           </div>
+
         </section>
+
 
         <!-- PATIENTS -->
         <section class="admin-section" id="patients">
+
           <div class="section-heading">
             <h2>Patient Management</h2>
             <p>Manage patient accounts and account activity.</p>
           </div>
 
           <div class="filter-bar">
-            <input type="search" placeholder="Search patient name or email..."
+            <input
+              type="search"
+              placeholder="Search patient name or email..."
               id="patientSearch">
           </div>
 
@@ -368,17 +422,23 @@
               Patient records will appear here after Firebase integration.
             </div>
           </div>
+
         </section>
+
 
         <!-- APPOINTMENTS -->
         <section class="admin-section" id="appointments">
+
           <div class="section-heading">
             <h2>Appointment Management</h2>
             <p>Monitor bookings, cancellations and appointment history.</p>
           </div>
 
           <div class="filter-bar">
-            <input type="search" placeholder="Search appointment..."
+
+            <input
+              type="search"
+              placeholder="Search appointment..."
               id="appointmentSearch">
 
             <select id="appointmentStatusFilter">
@@ -388,6 +448,7 @@
               <option value="completed">Completed</option>
               <option value="cancelled">Cancelled</option>
             </select>
+
           </div>
 
           <div class="panel table-panel">
@@ -395,90 +456,120 @@
               Appointment records will appear here after Firebase integration.
             </div>
           </div>
+
         </section>
+
 
         <!-- PAYMENTS -->
         <section class="admin-section" id="payments">
+
           <div class="section-heading">
             <h2>Payments & Finance</h2>
             <p>Monitor platform fees, refunds, gateway charges and payouts.</p>
           </div>
 
+
+          <!-- FINANCIAL STATISTICS -->
           <div class="stats-grid">
+
             <div class="stat-card">
               <p>Gross Platform Fees</p>
               <h2 id="grossPlatformFees">₹—</h2>
             </div>
-            
-<!-- EMERGENCY PAYMENT CONTROL -->
-<div class="panel payment-control-panel">
-  <div class="payment-control-header">
-    <div>
-      <h3>Emergency Payment Control</h3>
-      <p>
-        Temporarily stop new payment orders if suspicious
-        activity or a security incident is detected.
-      </p>
-    </div>
-    <span class="payment-status-badge" id="paymentStatusBadge">
-      Status: Not Connected
-    </span>
-  </div>
-
-  <div class="payment-control-actions">
-    <button
-      type="button"
-      id="disablePaymentsButton"
-      class="payment-disable-button"
-      disabled
-    >
-      Disable New Payments
-    </button>
-
-    <button
-      type="button"
-      id="enablePaymentsButton"
-      class="payment-enable-button"
-      disabled
-    >
-      Enable New Payments
-    </button>
-  </div>
-
-  <p class="payment-control-note" id="paymentControlMessage">
-    Payment controls will become available after secure backend integration.
-  </p>
-</div>
 
             <div class="stat-card">
               <p>Gateway Charges</p>
               <h2 id="gatewayCharges">₹—</h2>
             </div>
+
             <div class="stat-card">
               <p>Refunds</p>
               <h2 id="totalRefunds">₹—</h2>
             </div>
+
             <div class="stat-card">
               <p>Net Platform Revenue</p>
               <h2 id="netPlatformRevenue">₹—</h2>
             </div>
+
           </div>
 
+
+          <!-- EMERGENCY PAYMENT CONTROL -->
+          <div class="panel payment-control-panel">
+
+            <div class="payment-control-header">
+
+              <div>
+                <h3>Emergency Payment Control</h3>
+
+                <p>
+                  Temporarily stop new payment orders if suspicious
+                  activity or a security incident is detected.
+                </p>
+              </div>
+
+              <span
+                class="payment-status-badge"
+                id="paymentStatusBadge">
+                Status: Not Connected
+              </span>
+
+            </div>
+
+
+            <div class="payment-control-actions">
+
+              <button
+                type="button"
+                id="disablePaymentsButton"
+                class="payment-disable-button"
+                disabled>
+                Disable New Payments
+              </button>
+
+              <button
+                type="button"
+                id="enablePaymentsButton"
+                class="payment-enable-button"
+                disabled>
+                Enable New Payments
+              </button>
+
+            </div>
+
+
+            <p
+              class="payment-control-note"
+              id="paymentControlMessage">
+              Payment controls will become available after secure backend integration.
+            </p>
+
+          </div>
+
+
+          <!-- PAYMENT RECORDS -->
           <div class="panel table-panel">
+
             <div class="table-placeholder">
               Payment and payout records will appear here after integration.
             </div>
+
           </div>
+
         </section>
+
 
         <!-- VERIFICATION -->
         <section class="admin-section" id="verification">
+
           <div class="section-heading">
             <h2>Verification Centre</h2>
             <p>Review professional documents and institution credentials.</p>
           </div>
 
           <div class="filter-bar">
+
             <select id="verificationType">
               <option value="">All Applications</option>
               <option value="doctor">Doctor Applications</option>
@@ -490,6 +581,7 @@
               <option value="approved">Approved</option>
               <option value="rejected">Rejected</option>
             </select>
+
           </div>
 
           <div class="panel table-panel">
@@ -497,10 +589,13 @@
               Verification applications will appear here after integration.
             </div>
           </div>
+
         </section>
+
 
         <!-- REVIEWS -->
         <section class="admin-section" id="reviews">
+
           <div class="section-heading">
             <h2>Reviews & Complaints</h2>
             <p>Review patient feedback, reports and complaints.</p>
@@ -511,37 +606,48 @@
               Reviews and complaints will appear here after integration.
             </div>
           </div>
+
         </section>
+
 
         <!-- CONTENT -->
         <section class="admin-section" id="content">
+
           <div class="section-heading">
             <h2>Website Content</h2>
             <p>Manage public website information and content.</p>
           </div>
 
           <div class="management-grid">
+
             <div class="management-card">
               <h3>Medical Specialties</h3>
               <p>Manage the specialties displayed on CareBridge.</p>
             </div>
+
             <div class="management-card">
               <h3>Cities & Locations</h3>
               <p>Manage supported cities and service areas.</p>
             </div>
+
             <div class="management-card">
               <h3>Banners & Announcements</h3>
               <p>Manage homepage banners and announcements.</p>
             </div>
+
             <div class="management-card">
               <h3>Public Information</h3>
               <p>Manage About Us and other public content.</p>
             </div>
+
           </div>
+
         </section>
+
 
         <!-- ANALYTICS -->
         <section class="admin-section" id="analytics">
+
           <div class="section-heading">
             <h2>Reports & Analytics</h2>
             <p>Monitor the growth and performance of CareBridge.</p>
@@ -553,10 +659,13 @@
               <p>Registration, booking and revenue reports will appear here.</p>
             </div>
           </div>
+
         </section>
+
 
         <!-- NOTIFICATIONS -->
         <section class="admin-section" id="notifications">
+
           <div class="section-heading">
             <h2>Notifications</h2>
             <p>Manage platform announcements and user notifications.</p>
@@ -568,44 +677,57 @@
               <p>Notification management will be connected later.</p>
             </div>
           </div>
+
         </section>
+
 
         <!-- SETTINGS -->
         <section class="admin-section" id="settings">
+
           <div class="section-heading">
             <h2>Platform Settings</h2>
             <p>Manage CareBridge platform configuration and policies.</p>
           </div>
 
           <div class="management-grid">
+
             <div class="management-card">
               <h3>General Settings</h3>
               <p>Platform name, contact details and operating settings.</p>
             </div>
+
             <div class="management-card">
               <h3>Booking Policies</h3>
               <p>Appointment rules and cancellation policies.</p>
             </div>
+
             <div class="management-card">
               <h3>Payment Settings</h3>
               <p>Platform fee and payment configuration.</p>
             </div>
+
             <div class="management-card">
               <h3>Security Settings</h3>
               <p>Authentication and access control.</p>
             </div>
+
           </div>
+
         </section>
+
 
         <!-- ADMIN ACCESS -->
         <section class="admin-section" id="admins">
+
           <div class="section-heading">
             <h2>Admin Access</h2>
             <p>Manage people authorized to access the central admin website.</p>
           </div>
 
           <div class="panel">
+
             <h3>Administrator Accounts</h3>
+
             <p>
               Your Super Admin account will have full control.
               Trusted administrators can be added later with individually
@@ -615,19 +737,25 @@
             <div class="table-placeholder">
               Admin access management will be connected securely later.
             </div>
+
           </div>
+
         </section>
 
       </div>
 
+
+      <!-- FOOTER -->
       <footer class="admin-footer">
         CareBridge Administration · © 2026 CareBridge
       </footer>
 
     </main>
 
-  </>
+  </div>
 
+
+  <!-- ADMIN JAVASCRIPT -->
   <script type="module" src="js/admin.js"></script>
 
 </body>
