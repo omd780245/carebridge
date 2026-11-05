@@ -300,6 +300,21 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       // CLINIC LOGIN
       if (selectedRole === "clinic") {
+                // PREVENT PATIENT ACCOUNTS FROM USING CLINIC LOGIN
+        const patientSnapshot = await get(
+          ref(db, "users/" + user.uid)
+        );
+
+        if (patientSnapshot.exists()) {
+          await signOut(auth);
+
+          showMessage(
+            loginMessage,
+            "This email belongs to a Patient or Doctor account. Please select the correct account type."
+          );
+
+          return;
+        }
 
         const snapshot = await get(
           ref(db, "institutions/" + user.uid)
@@ -356,6 +371,23 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
 
       } else {
+                // PREVENT A CLINIC ACCOUNT FROM USING PATIENT/DOCTOR LOGIN
+        const institutionSnapshot = await get(
+          ref(db, "institutions/" + user.uid)
+        );
+
+        if (institutionSnapshot.exists()) {
+          const institutionProfile = institutionSnapshot.val();
+
+          await signOut(auth);
+
+          showMessage(
+            loginMessage,
+            "This email belongs to a Clinic / Hospital account. Please select Clinic / Hospital to log in."
+          );
+
+          return;
+        }
 
         // PATIENT AND DOCTOR LOGIN
         const snapshot = await get(
