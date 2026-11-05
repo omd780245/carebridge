@@ -1,0 +1,432 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Patient Dashboard | CareBridge</title>
+
+  <link rel="stylesheet" href="css/patient-dashboard.css">
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <h2>CareBridge</h2>
+    <button id="logoutButton" type="button">Logout</button>
+  </header>
+
+  <!-- MAIN DASHBOARD -->
+  <main>
+
+    <!-- WELCOME -->
+    <section class="welcome">
+      <h1>
+        Welcome, <span id="patientName">Patient</span>!
+      </h1>
+      <p>Your personal healthcare dashboard.</p>
+    </section>
+
+    <!-- PROFILE CARD -->
+    <section class="card">
+
+      <h3>My Profile</h3>
+
+      <div class="detail">
+        <strong>Full Name</strong>
+        <span id="fullName">Loading...</span>
+      </div>
+
+      <div class="detail">
+        <strong>Email</strong>
+        <span id="email">Loading...</span>
+      </div>
+
+      <div class="detail">
+        <strong>Phone</strong>
+        <span id="phone">Loading...</span>
+      </div>
+
+      <div class="detail">
+        <strong>Account</strong>
+        <span class="status" id="accountStatus">Loading...</span>
+      </div>
+
+    </section>
+
+    <!-- APPOINTMENTS CARD -->
+    
+<section class="card">
+  <h3>My Appointments</h3>
+
+  <div class="appointment-tabs">
+    <button class="appointment-tab active" data-filter="all">All</button>
+    <button class="appointment-tab" data-filter="upcoming">Upcoming</button>
+    <button class="appointment-tab" data-filter="completed">Completed</button>
+    <button class="appointment-tab" data-filter="cancelled">Cancelled</button>
+  </div>
+
+  <div id="appointmentsList">
+    <p>Loading appointments...</p>
+  </div>
+</section>
+
+
+    <!-- MESSAGE -->
+    <p id="message" role="status" aria-live="polite"></p>
+
+  </main>
+
+  <!-- FIREBASE SCRIPT -->
+  <script type="module">
+
+    import {
+      onAuthStateChanged,
+      signOut
+    } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
+
+    import {
+  ref,
+  get,
+  query,
+  orderByChild,
+  equalTo
+} from "https://www.gstatic.com/firebasejs/13.2.0/firebase-database.js";
+    import {
+      auth,
+      db,
+      authPersistence
+    } from "./js/firebase.js";
+
+
+    const message = document.getElementById("message");
+
+    const logoutButton =
+      document.getElementById("logoutButton");
+
+    let dashboardLoading = false;
+    
+// =====================================
+// PATIENT APPOINTMENTS
+// =====================================
+
+let currentAppointmentFilter = "all";
+let patientAppointments = [];
+
+function displayAppointments() {
+
+  const container = document.getElementById("appointmentsList");
+
+  if (!container) return;
+
+  container.replaceChildren();
+
+  let filtered = patientAppointments;
+
+  if (currentAppointmentFilter === "upcoming") {
+    filtered = patientAppointments.filter(item =>
+      ["pending", "confirmed"].includes(
+        String(item.appointmentStatus || "").toLowerCase()
+      )
+    );
+  }
+
+  if (currentAppointmentFilter === "completed") {
+    filtered = patientAppointments.filter(item =>
+      String(item.appointmentStatus || "").toLowerCase() === "completed"
+    );
+  }
+
+  if (currentAppointmentFilter === "cancelled") {
+    filtered = patientAppointments.filter(item =>
+      String(item.appointmentStatus || "").toLowerCase() === "cancelled"
+    );
+  }
+
+  if (filtered.length === 0) {
+    const empty = document.createElement("p");
+    empty.textContent = "No appointments found in this category.";
+    container.appendChild(empty);
+    return;
+  }
+
+  filtered.forEach(item => {
+
+    const card = document.createElement("div");
+    card.className = "appointment-item";
+
+    const doctor = document.createElement("h4");
+    doctor.textContent = item.doctorName || "Doctor";
+
+    const institution = document.createElement("p");
+    institution.textContent =
+      "Clinic/Hospital: " + (item.institutionName || "Not specified");
+
+    const date = document.createElement("p");
+    date.textContent =
+      "Date: " + (item.appointmentDate || "Not specified");
+
+    const time = document.createElement("p");
+    time.textContent =
+      "Time: " + (item.startTime || "Not specified") +
+      (item.endTime ? " - " + item.endTime : "");
+
+    const fee = document.createElement("p");
+    fee.textContent =
+      "Consultation Fee: ₹" + (item.consultationFee ?? "Not specified");
+
+    const status = document.createElement("p");
+    status.textContent =
+      "Status: " + (item.appointmentStatus || "Unknown");
+
+    card.append(doctor, institution, date, time, fee, status);
+    container.appendChild(card);
+
+  });
+}
+
+
+// Load appointments belonging to the signed-in patient.
+async function loadPatientAppointments(user) {
+
+  const container = document.getElementById("appointmentsList");
+
+  try {
+
+    const appointmentsQuery = query(
+      ref(db, "appointments"),
+      orderByChild("patientId"),
+      equalTo(user.uid)
+    );
+
+    const snapshot = await get(appointmentsQuery);
+
+    patientAppointments = [];
+
+    if (snapshot.exists()) {
+
+      snapshot.forEach(child => {
+
+        patientAppointments.push({
+          id: child.key,
+          ...child.val()
+        });
+
+      });
+
+    }
+
+    displayAppointments();
+
+  } catch (error) {
+
+    console.error("Appointment loading error:", error);
+
+    if (container) {
+      container.textContent =
+        "Unable to load appointments. Please try again later.";
+    }
+
+  }
+
+}
+
+
+// Appointment filter buttons
+document.querySelectorAll(".appointment-tab").forEach(button => {
+
+  button.addEventListener("click", function () {
+
+    currentAppointmentFilter = button.dataset.filter;
+
+    document.querySelectorAll(".appointment-tab").forEach(tab => {
+      tab.classList.remove("active");
+    });
+
+    button.classList.add("active");
+
+    displayAppointments();
+
+  });
+
+});
+
+
+
+    // =====================================
+    // LOGOUT
+    // =====================================
+
+    logoutButton.addEventListener("click", async function () {
+
+      logoutButton.disabled = true;
+      logoutButton.textContent = "Logging out...";
+
+      try {
+
+        await authPersistence;
+        await signOut(auth);
+
+        window.location.replace("login.html");
+
+      } catch (error) {
+
+        console.error("Logout error:", error);
+
+        message.textContent =
+          "Unable to logout. Please try again.";
+
+        logoutButton.disabled = false;
+        logoutButton.textContent = "Logout";
+
+      }
+
+    });
+
+
+    // =====================================
+    // AUTHENTICATION AND PROFILE
+    // =====================================
+
+    async function loadPatientDashboard(user) {
+
+      if (dashboardLoading) return;
+
+      dashboardLoading = true;
+
+      try {
+
+        await user.reload();
+
+        if (!user.emailVerified) {
+
+          await signOut(auth);
+
+          window.location.replace("login.html");
+          return;
+
+        }
+
+
+        // GET PATIENT PROFILE
+
+        const profileRef = ref(
+          db,
+          "users/" + user.uid
+        );
+
+        const snapshot = await get(profileRef);
+
+
+        if (!snapshot.exists()) {
+
+          message.textContent =
+            "Patient profile not found. Please contact support.";
+
+          await signOut(auth);
+
+          return;
+
+        }
+
+
+        const profile = snapshot.val();
+        await loadPatientAppointments(user);
+
+
+        // VERIFY ACCOUNT ROLE
+
+        if (
+          profile.role !== "patient" ||
+          profile.accountStatus !== "active"
+        ) {
+
+          message.textContent =
+            "This account does not have active patient access.";
+
+          await signOut(auth);
+
+          window.location.replace("login.html");
+          return;
+
+        }
+
+
+        // DISPLAY PROFILE INFORMATION
+
+        document.getElementById("patientName").textContent =
+          profile.fullName || "Patient";
+
+        document.getElementById("fullName").textContent =
+          profile.fullName || "Not available";
+
+        document.getElementById("email").textContent =
+          profile.email || user.email || "Not available";
+
+        document.getElementById("phone").textContent =
+          profile.phone || "Not available";
+
+        document.getElementById("accountStatus").textContent =
+          profile.accountStatus || "Unknown";
+
+
+        message.textContent = "";
+
+      } catch (error) {
+
+        console.error(
+          "Patient dashboard loading error:",
+          error
+        );
+
+        message.textContent =
+          "Unable to load your profile. Please refresh the page.";
+
+      } finally {
+
+        dashboardLoading = false;
+
+      }
+
+    }
+
+
+    // =====================================
+    // WAIT FOR FIREBASE SESSION
+    // =====================================
+
+    try {
+
+      await authPersistence;
+
+      onAuthStateChanged(auth, function (user) {
+
+        if (!user) {
+
+          window.location.replace("login.html");
+          return;
+
+        }
+
+        loadPatientDashboard(user);
+
+      });
+
+    } catch (error) {
+
+      console.error(
+        "Firebase initialization error:",
+        error
+      );
+
+      message.textContent =
+        "Unable to connect to Firebase. Please refresh the page.";
+
+    }
+
+  </script>
+
+</body>
+</html>
