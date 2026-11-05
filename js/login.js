@@ -264,15 +264,66 @@ document.addEventListener("DOMContentLoaded", async function () {
       );
 
       if (!snapshot.exists()) {
-        await signOut(auth);
 
-        showMessage(
-          loginMessage,
-          "Account profile not found. Please contact CareBridge support."
-        );
+  if (user.emailVerified) {
 
-        return;
-      }
+    const recoveredName = prompt(
+      "Your account profile is missing. Enter your full name:"
+    );
+
+    if (!recoveredName || !recoveredName.trim()) {
+      await signOut(auth);
+      showMessage(loginMessage, "Name is required to recover your account.");
+      return;
+    }
+
+    const recoveredPhone = prompt(
+      "Enter your registered phone number:"
+    );
+
+    if (!recoveredPhone || !recoveredPhone.trim()) {
+      await signOut(auth);
+      showMessage(loginMessage, "Phone number is required.");
+      return;
+    }
+
+    try {
+
+      await set(ref(db, "users/" + user.uid), {
+        uid: user.uid,
+        fullName: recoveredName.trim(),
+        email: user.email,
+        phone: recoveredPhone.trim(),
+        role: "patient",
+        accountStatus: "active",
+        emailVerified: true,
+        createdAt: Date.now()
+      });
+
+      showMessage(
+        loginMessage,
+        "Your patient profile has been recovered successfully!",
+        true
+      );
+
+      redirectByRole("patient");
+      return;
+
+    } catch (recoveryError) {
+
+      console.error("Profile recovery error:", recoveryError);
+
+      await signOut(auth);
+
+      showMessage(
+        loginMessage,
+        "Profile recovery failed: " + recoveryError.message
+      );
+
+      return;
+    }
+  }
+}
 
       const profile = snapshot.val();
 

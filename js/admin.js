@@ -2,15 +2,20 @@
 import {
   signInWithEmailAndPassword,
   onAuthStateChanged,
-  signOut,
+  signOut
 } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
 
-import { auth, authPersistence, db } from "./firebase.js";
+import {
+  auth,
+  authPersistence,
+  db
+} from "./firebase.js";
 
 import {
   ref,
   get
 } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-database.js";
+
 
 document.addEventListener("DOMContentLoaded", async function () {
 
@@ -25,17 +30,32 @@ document.addEventListener("DOMContentLoaded", async function () {
   const passwordInput = document.getElementById("adminPassword");
   const loginButton = document.getElementById("adminLoginButton");
   const loginMessage = document.getElementById("adminLoginMessage");
-
   const logoutButton = document.getElementById("logoutButton");
+
+  // ==========================================
+  // PAYMENT CONTROL ELEMENTS
+  // ==========================================
+
+  const paymentStatusBadge =
+    document.getElementById("paymentStatusBadge");
+
+  const disablePaymentsButton =
+    document.getElementById("disablePaymentsButton");
+
+  const enablePaymentsButton =
+    document.getElementById("enablePaymentsButton");
+
+  const paymentControlMessage =
+    document.getElementById("paymentControlMessage");
 
   // ==========================================
   // LOGIN MESSAGE
   // ==========================================
 
   /**
- * @param {string} message
- */
-function showLoginMessage(message) {
+   * @param {string} message
+   */
+  function showLoginMessage(message) {
     if (loginMessage) {
       loginMessage.textContent = message;
     }
@@ -72,76 +92,205 @@ function showLoginMessage(message) {
   }
 
   // ==========================================
-  // FIREBASE AUTHENTICATION STATE
+  // PAYMENT STATUS DISPLAY
+  // ==========================================
+
+  /**
+   * @param {boolean} enabled
+   */
+  function displayPaymentStatus(enabled) {
+
+    if (paymentStatusBadge) {
+      paymentStatusBadge.textContent = enabled
+        ? "Payments: Enabled"
+        : "Payments: Disabled";
+
+      paymentStatusBadge.style.background = enabled
+        ? "#e6f7ef"
+        : "#fdeaea";
+
+      paymentStatusBadge.style.color = enabled
+        ? "#147a4b"
+        : "#bd3030";
+    }
+
+    if (paymentControlMessage) {
+      paymentControlMessage.textContent = enabled
+        ? "Firebase reports that new payments are enabled."
+        : "Firebase reports that new payments are disabled.";
+    }
+  }
+
+  // ==========================================
+  // KEEP PAYMENT BUTTONS DISABLED
+  // ==========================================
+
+  function disablePaymentControls() {
+
+    if (disablePaymentsButton) {
+      disablePaymentsButton.disabled = true;
+    }
+
+    if (enablePaymentsButton) {
+      enablePaymentsButton.disabled = true;
+    }
+  }
+
+  // ==========================================
+  // LOAD PAYMENT SETTINGS FROM FIREBASE
+  // ==========================================
+
+  async function loadPaymentSettings() {
+
+    disablePaymentControls();
+
+    if (paymentStatusBadge) {
+      paymentStatusBadge.textContent = "Status: Loading...";
+    }
+
+    if (paymentControlMessage) {
+      paymentControlMessage.textContent =
+        "Loading payment settings from Firebase...";
+    }
+
+    try {
+
+      const enabledRef = ref(
+        db,
+        "platform/paymentSettings/enabled"
+      );
+
+      const snapshot = await get(enabledRef);
+
+      if (!snapshot.exists()) {
+        throw new Error("Payment setting was not found.");
+      }
+
+      const enabled = snapshot.val();
+
+      if (typeof enabled !== "boolean") {
+        throw new Error("Payment setting must be true or false.");
+      }
+
+      displayPaymentStatus(enabled);
+
+    } catch (error) {
+
+      console.error("Payment settings loading error:", error);
+
+      if (paymentStatusBadge) {
+        paymentStatusBadge.textContent =
+          "Status: Unable to Load";
+      }
+
+      if (paymentControlMessage) {
+        paymentControlMessage.textContent =
+          "Unable to read payment settings. Check Firebase database rules and connection.";
+      }
+
+      disablePaymentControls();
+    }
+  }
+
+  // ==========================================
+  // SHOW LOGIN FIRST
   // ==========================================
 
   showLoginScreen();
+  disablePaymentControls();
+
+  // ==========================================
+  // FIREBASE AUTHENTICATION
+  // ==========================================
 
   try {
+
     await authPersistence;
 
-    /**
- * @param {any} user
- */
-/**
- * @param {any} user
- */
-onAuthStateChanged(auth, async function (/** @type {any} */ user) {
+    onAuthStateChanged(auth, async function (/** @type {any} */ user) {
 
       if (!user) {
+
         showLoginScreen();
+        disablePaymentControls();
+
+        if (paymentStatusBadge) {
+          paymentStatusBadge.textContent =
+            "Status: Not Connected";
+        }
+
         return;
       }
 
       try {
-        // Read the authenticated user's administrator record.
-const adminRef = ref(db, "admins/" + user.uid);
-const adminSnapshot = await get(adminRef);
 
-if (!adminSnapshot.exists()) {
-  await signOut(auth);
-  showLoginScreen();
+        // Read authenticated administrator record.
+        const adminRef = ref(
+          db,
+          "admins/" + user.uid
+        );
 
-  showLoginMessage(
-    "This account does not have administrator permission."
-  );
+        const adminSnapshot = await get(adminRef);
 
-  return;
-}
+        if (!adminSnapshot.exists()) {
 
-const adminData = adminSnapshot.val();
+          await signOut(auth);
 
-const isAuthorizedAdmin =
-  adminData.role === "super_admin" &&
-  adminData.status === "active";
+          showLoginScreen();
 
-if (!isAuthorizedAdmin) {
-  await signOut(auth);
-  showLoginScreen();
+          showLoginMessage(
+            "This account does not have administrator permission."
+          );
 
-  showLoginMessage(
-    "Administrator access is inactive or unauthorized."
-  );
+          return;
+        }
 
-  return;
-}
+        const adminData = adminSnapshot.val();
 
-showAdminDashboard();
+        const isAuthorizedAdmin =
+          adminData.role === "super_admin" &&
+          adminData.status === "active";
+
+        if (!isAuthorizedAdmin) {
+
+          await signOut(auth);
+
+          showLoginScreen();
+
+          showLoginMessage(
+            "Administrator access is inactive or unauthorized."
+          );
+
+          return;
+        }
+
+        // Administrator record verified.
+        showAdminDashboard();
+
+        // Load payment status only after verification.
+        await loadPaymentSettings();
 
       } catch (error) {
+
         console.error("Admin authorization error:", error);
 
-        await signOut(auth);
+        try {
+          await signOut(auth);
+        } catch (logoutError) {
+          console.error("Sign-out error:", logoutError);
+        }
+
         showLoginScreen();
 
         showLoginMessage(
-          "Unable to verify administrator permission. Please try again."
+          "Verification failed: " +
+          (error.code || error.message || "Unknown error")
         );
       }
-
     });
 
   } catch (error) {
+
     console.error("Firebase initialization error:", error);
 
     showLoginScreen();
@@ -165,15 +314,19 @@ showAdminDashboard();
       const password = passwordInput.value;
 
       if (!email || !password) {
-        showLoginMessage("Please enter your email and password.");
+        showLoginMessage(
+          "Please enter your email and password."
+        );
         return;
       }
 
       loginButton.disabled = true;
       loginButton.textContent = "Signing in...";
+
       showLoginMessage("");
 
       try {
+
         await authPersistence;
 
         await signInWithEmailAndPassword(
@@ -182,33 +335,43 @@ showAdminDashboard();
           password
         );
 
-        // Authorization is checked by onAuthStateChanged.
-        // Signing in alone does not grant admin access.
-
       } catch (error) {
+
         console.error("Admin login error:", error);
 
         if (error.code === "auth/invalid-credential") {
+
           showLoginMessage("Incorrect email or password.");
+
         } else if (error.code === "auth/too-many-requests") {
-          showLoginMessage("Too many attempts. Try again later.");
+
+          showLoginMessage(
+            "Too many attempts. Try again later."
+          );
+
         } else if (error.code === "auth/network-request-failed") {
-          showLoginMessage("Network error. Check your internet connection.");
+
+          showLoginMessage(
+            "Network error. Check your internet connection."
+          );
+
         } else {
-          showLoginMessage("Login failed. Please try again.");
+
+          showLoginMessage(
+            "Login failed. Please try again."
+          );
         }
 
       } finally {
+
         loginButton.disabled = false;
         loginButton.textContent = "Sign In to Dashboard";
       }
-
     });
-
   }
 
   // ==========================================
-  // ADMIN DASHBOARD ELEMENTS
+  // DASHBOARD ELEMENTS
   // ==========================================
 
   const sidebar = document.getElementById("sidebar");
@@ -247,10 +410,14 @@ showAdminDashboard();
    */
   function showSection(sectionId) {
 
-    const selectedSection = document.getElementById(sectionId);
+    const selectedSection =
+      document.getElementById(sectionId);
 
     if (!selectedSection) {
-      console.warn("Admin section not found:", sectionId);
+      console.warn(
+        "Admin section not found:",
+        sectionId
+      );
       return;
     }
 
@@ -298,38 +465,38 @@ showAdminDashboard();
       const sectionId = item.dataset.section;
 
       if (!sectionId) {
-        console.warn("Navigation item has no data-section.");
+        console.warn(
+          "Navigation item has no data-section."
+        );
         return;
       }
 
       showSection(sectionId);
-
     });
-
   });
 
   // ==========================================
   // DASHBOARD QUICK LINKS
   // ==========================================
 
-  const quickLinks = document.querySelectorAll("[data-open]");
+  document.querySelectorAll("[data-open]").forEach(
+    function (button) {
 
-  quickLinks.forEach(function (button) {
+      button.addEventListener("click", function () {
 
-    button.addEventListener("click", function () {
+        const sectionId = button.dataset.open;
 
-      const sectionId = button.dataset.open;
+        if (!sectionId) {
+          console.warn(
+            "Quick link has no data-open value."
+          );
+          return;
+        }
 
-      if (!sectionId) {
-        console.warn("Quick link has no data-open value.");
-        return;
-      }
-
-      showSection(sectionId);
-
-    });
-
-  });
+        showSection(sectionId);
+      });
+    }
+  );
 
   // ==========================================
   // MOBILE SIDEBAR TOGGLE
@@ -339,7 +506,8 @@ showAdminDashboard();
 
     menuToggle.addEventListener("click", function () {
 
-      const isOpen = sidebar.classList.toggle("open");
+      const isOpen =
+        sidebar.classList.toggle("open");
 
       menuToggle.setAttribute(
         "aria-expanded",
@@ -350,9 +518,7 @@ showAdminDashboard();
         "aria-label",
         isOpen ? "Close sidebar" : "Open sidebar"
       );
-
     });
-
   }
 
   // ==========================================
@@ -373,30 +539,36 @@ showAdminDashboard();
 
       sidebar.classList.remove("open");
 
-      menuToggle.setAttribute("aria-expanded", "false");
-      menuToggle.setAttribute("aria-label", "Open sidebar");
+      menuToggle.setAttribute(
+        "aria-expanded",
+        "false"
+      );
 
+      menuToggle.setAttribute(
+        "aria-label",
+        "Open sidebar"
+      );
     }
-
   });
 
   // ==========================================
   // CURRENT DATE
   // ==========================================
 
-  const currentDate = document.getElementById("currentDate");
+  const currentDate =
+    document.getElementById("currentDate");
 
   if (currentDate) {
 
-    currentDate.textContent = new Date().toLocaleDateString(
-      "en-IN",
-      {
-        day: "numeric",
-        month: "long",
-        year: "numeric"
-      }
-    );
-
+    currentDate.textContent =
+      new Date().toLocaleDateString(
+        "en-IN",
+        {
+          day: "numeric",
+          month: "long",
+          year: "numeric"
+        }
+      );
   }
 
   // ==========================================
@@ -408,16 +580,22 @@ showAdminDashboard();
     logoutButton.addEventListener("click", async function () {
 
       try {
+
         await signOut(auth);
-        showLoginMessage("You have been signed out.");
+
+        showLoginMessage(
+          "You have been signed out."
+        );
 
       } catch (error) {
+
         console.error("Logout error:", error);
-        alert("Unable to sign out. Please try again.");
+
+        alert(
+          "Unable to sign out. Please try again."
+        );
       }
-
     });
-
   }
 
   // ==========================================
@@ -433,14 +611,14 @@ showAdminDashboard();
 
   searchInputs.forEach(function (inputId) {
 
-    const input = document.getElementById(inputId);
+    const input =
+      document.getElementById(inputId);
 
     if (!input) return;
 
     input.addEventListener("input", function () {
       // Database search will be connected later.
     });
-
   });
 
   // ==========================================
@@ -457,14 +635,14 @@ showAdminDashboard();
 
   filterIds.forEach(function (filterId) {
 
-    const filter = document.getElementById(filterId);
+    const filter =
+      document.getElementById(filterId);
 
     if (!filter) return;
 
     filter.addEventListener("change", function () {
       // Database filtering will be connected later.
     });
-
   });
 
 });
