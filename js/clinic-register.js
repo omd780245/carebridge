@@ -2,7 +2,8 @@
 import {
   createUserWithEmailAndPassword,
   sendEmailVerification,
-  deleteUser
+  deleteUser,
+  signOut
 } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
 
 import {
@@ -101,6 +102,7 @@ form.addEventListener("submit", async function (event) {
       ref(db, "institutions/" + newUser.uid),
       institutionData
     );
+    await signOut(auth);
 
     form.reset();
 
