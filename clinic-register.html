@@ -87,6 +87,27 @@
         <input type="tel" id="phone" name="phone"
           placeholder="Enter 10-digit mobile number"
           pattern="[0-9]{10}" maxlength="10" required>
+        <label for="password">Create Password *</label>
+<input
+  type="password"
+  id="password"
+  name="password"
+  placeholder="Create a password (minimum 8 characters)"
+  minlength="8"
+  autocomplete="new-password"
+  required
+>
+
+<label for="confirmPassword">Confirm Password *</label>
+<input
+  type="password"
+  id="confirmPassword"
+  name="confirmPassword"
+  placeholder="Re-enter your password"
+  minlength="8"
+  autocomplete="new-password"
+  required
+>
       </section>
 
       <!-- LOCATION INFORMATION -->
@@ -177,6 +198,6 @@
   <footer>
     <p>© 2026 CareBridge. All rights reserved.</p>
   </footer>
-
+<script type="module" src="js/clinic-register.js"></script>
 </body>
 </html>
