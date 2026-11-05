@@ -57,17 +57,22 @@
     </section>
 
     <!-- APPOINTMENTS CARD -->
-    <section class="card">
+    
+<section class="card">
+  <h3>My Appointments</h3>
 
-      <h3>My Appointments</h3>
+  <div class="appointment-tabs">
+    <button class="appointment-tab active" data-filter="all">All</button>
+    <button class="appointment-tab" data-filter="upcoming">Upcoming</button>
+    <button class="appointment-tab" data-filter="completed">Completed</button>
+    <button class="appointment-tab" data-filter="cancelled">Cancelled</button>
+  </div>
 
-      <p>You have no appointment records yet.</p>
+  <div id="appointmentsList">
+    <p>Loading appointments...</p>
+  </div>
+</section>
 
-      <p style="margin-top:10px;color:#64748b;">
-        Appointment booking will be connected in the next development stage.
-      </p>
-
-    </section>
 
     <!-- MESSAGE -->
     <p id="message" role="status" aria-live="polite"></p>
@@ -83,10 +88,12 @@
     } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-auth.js";
 
     import {
-      ref,
-      get
-    } from "https://www.gstatic.com/firebasejs/13.2.0/firebase-database.js";
-
+  ref,
+  get,
+  query,
+  orderByChild,
+  equalTo
+} from "https://www.gstatic.com/firebasejs/13.2.0/firebase-database.js";
     import {
       auth,
       db,
@@ -100,6 +107,152 @@
       document.getElementById("logoutButton");
 
     let dashboardLoading = false;
+    
+// =====================================
+// PATIENT APPOINTMENTS
+// =====================================
+
+let currentAppointmentFilter = "all";
+let patientAppointments = [];
+
+function displayAppointments() {
+
+  const container = document.getElementById("appointmentsList");
+
+  if (!container) return;
+
+  container.replaceChildren();
+
+  let filtered = patientAppointments;
+
+  if (currentAppointmentFilter === "upcoming") {
+    filtered = patientAppointments.filter(item =>
+      ["pending", "confirmed"].includes(
+        String(item.appointmentStatus || "").toLowerCase()
+      )
+    );
+  }
+
+  if (currentAppointmentFilter === "completed") {
+    filtered = patientAppointments.filter(item =>
+      String(item.appointmentStatus || "").toLowerCase() === "completed"
+    );
+  }
+
+  if (currentAppointmentFilter === "cancelled") {
+    filtered = patientAppointments.filter(item =>
+      String(item.appointmentStatus || "").toLowerCase() === "cancelled"
+    );
+  }
+
+  if (filtered.length === 0) {
+    const empty = document.createElement("p");
+    empty.textContent = "No appointments found in this category.";
+    container.appendChild(empty);
+    return;
+  }
+
+  filtered.forEach(item => {
+
+    const card = document.createElement("div");
+    card.className = "appointment-item";
+
+    const doctor = document.createElement("h4");
+    doctor.textContent = item.doctorName || "Doctor";
+
+    const institution = document.createElement("p");
+    institution.textContent =
+      "Clinic/Hospital: " + (item.institutionName || "Not specified");
+
+    const date = document.createElement("p");
+    date.textContent =
+      "Date: " + (item.appointmentDate || "Not specified");
+
+    const time = document.createElement("p");
+    time.textContent =
+      "Time: " + (item.startTime || "Not specified") +
+      (item.endTime ? " - " + item.endTime : "");
+
+    const fee = document.createElement("p");
+    fee.textContent =
+      "Consultation Fee: ₹" + (item.consultationFee ?? "Not specified");
+
+    const status = document.createElement("p");
+    status.textContent =
+      "Status: " + (item.appointmentStatus || "Unknown");
+
+    card.append(doctor, institution, date, time, fee, status);
+    container.appendChild(card);
+
+  });
+}
+
+
+// Load appointments belonging to the signed-in patient.
+async function loadPatientAppointments(user) {
+
+  const container = document.getElementById("appointmentsList");
+
+  try {
+
+    const appointmentsQuery = query(
+      ref(db, "appointments"),
+      orderByChild("patientId"),
+      equalTo(user.uid)
+    );
+
+    const snapshot = await get(appointmentsQuery);
+
+    patientAppointments = [];
+
+    if (snapshot.exists()) {
+
+      snapshot.forEach(child => {
+
+        patientAppointments.push({
+          id: child.key,
+          ...child.val()
+        });
+
+      });
+
+    }
+
+    displayAppointments();
+
+  } catch (error) {
+
+    console.error("Appointment loading error:", error);
+
+    if (container) {
+      container.textContent =
+        "Unable to load appointments. Please try again later.";
+    }
+
+  }
+
+}
+
+
+// Appointment filter buttons
+document.querySelectorAll(".appointment-tab").forEach(button => {
+
+  button.addEventListener("click", function () {
+
+    currentAppointmentFilter = button.dataset.filter;
+
+    document.querySelectorAll(".appointment-tab").forEach(tab => {
+      tab.classList.remove("active");
+    });
+
+    button.classList.add("active");
+
+    displayAppointments();
+
+  });
+
+});
+
 
 
     // =====================================
@@ -180,6 +333,7 @@
 
 
         const profile = snapshot.val();
+        await loadPatientAppointments(user);
 
 
         // VERIFY ACCOUNT ROLE
