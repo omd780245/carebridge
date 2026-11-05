@@ -103,7 +103,11 @@ document.addEventListener("DOMContentLoaded", async function () {
       label.classList.remove("active");
     });
 
-    selectedOption.closest(".role-option").classList.add("active");
+    const selectedLabel = selectedOption.closest(".role-option");
+
+    if (selectedLabel) {
+      selectedLabel.classList.add("active");
+    }
   }
 
   roleOptions.forEach(function (option) {
@@ -112,7 +116,11 @@ document.addEventListener("DOMContentLoaded", async function () {
         label.classList.remove("active");
       });
 
-      option.closest(".role-option").classList.add("active");
+      const selectedLabel = option.closest(".role-option");
+
+      if (selectedLabel) {
+        selectedLabel.classList.add("active");
+      }
     });
   });
 
@@ -146,18 +154,41 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   }
 
-  // REGISTRATION
+  // PATIENT REGISTRATION
   registerForm.addEventListener("submit", async function (event) {
     event.preventDefault();
 
     showMessage(registerMessage, "Creating your account...");
 
     const name = fullName.value.trim();
-    const email = registerEmail.value.trim();
+    const email = registerEmail.value.trim().toLowerCase();
     const mobile = phone.value.trim();
     const password = registerPassword.value;
     const confirm = confirmPassword.value;
     const role = getSelectedRole();
+
+    // CLINICS USE THEIR DEDICATED REGISTRATION PAGE
+    if (role === "clinic") {
+      showMessage(
+        registerMessage,
+        "Please use the dedicated Clinic & Hospital Registration page."
+      );
+      return;
+    }
+
+    // DOCTOR REGISTRATION IS NOT ENABLED THROUGH THIS FORM
+    if (role === "doctor") {
+      showMessage(
+        registerMessage,
+        "Please use the dedicated Doctor Registration page."
+      );
+      return;
+    }
+
+    if (!name || !email || !mobile) {
+      showMessage(registerMessage, "Please complete all required fields.");
+      return;
+    }
 
     if (password !== confirm) {
       showMessage(registerMessage, "Passwords do not match.");
@@ -165,7 +196,10 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
 
     if (password.length < 6) {
-      showMessage(registerMessage, "Password must contain at least 6 characters.");
+      showMessage(
+        registerMessage,
+        "Password must contain at least 6 characters."
+      );
       return;
     }
 
@@ -180,30 +214,27 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       const user = userCredential.user;
 
-      // Send email verification link
       await sendEmailVerification(user);
 
-      // Create initial account profile
-      const accountStatus = role === "patient" ? "active" : "pending";
-
+      // CREATE PATIENT PROFILE
       await set(ref(db, "users/" + user.uid), {
         uid: user.uid,
         fullName: name,
         email: email,
         phone: mobile,
-        role: role,
-        accountStatus: accountStatus,
+        role: "patient",
+        accountStatus: "active",
         emailVerified: false,
         createdAt: Date.now()
       });
 
+      await signOut(auth);
+
       showMessage(
         registerMessage,
-        "Account created! Check your email and click the verification link before logging in.",
+        "Account created successfully! Check your email and verify your account before logging in.",
         true
       );
-
-      await signOut(auth);
 
       registerForm.reset();
 
@@ -211,15 +242,22 @@ document.addEventListener("DOMContentLoaded", async function () {
       console.error("Registration error:", error);
 
       const messages = {
-        "auth/email-already-in-use": "This email is already registered.",
-        "auth/invalid-email": "Please enter a valid email address.",
-        "auth/weak-password": "Please choose a stronger password.",
-        "auth/network-request-failed": "Network error. Check your internet connection."
+        "auth/email-already-in-use":
+          "This email is already registered.",
+
+        "auth/invalid-email":
+          "Please enter a valid email address.",
+
+        "auth/weak-password":
+          "Please choose a stronger password.",
+
+        "auth/network-request-failed":
+          "Network error. Check your internet connection."
       };
 
       showMessage(
         registerMessage,
-        messages[error.code] || error.message
+        messages[error.code] || "Registration failed: " + error.message
       );
     }
   });
@@ -230,7 +268,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
     showMessage(loginMessage, "Logging in...");
 
-    const email = loginEmail.value.trim();
+    const email = loginEmail.value.trim().toLowerCase();
     const password = loginPassword.value;
     const selectedRole = getSelectedRole();
 
@@ -258,128 +296,217 @@ document.addEventListener("DOMContentLoaded", async function () {
         return;
       }
 
-      // Get account profile
-      const snapshot = await get(
-        ref(db, "users/" + user.uid)
-      );
+      let profile;
 
-      if (!snapshot.exists()) {
+      // CLINIC LOGIN
+      if (selectedRole === "clinic") {
 
-  if (user.emailVerified) {
-
-    const recoveredName = prompt(
-      "Your account profile is missing. Enter your full name:"
-    );
-
-    if (!recoveredName || !recoveredName.trim()) {
-      await signOut(auth);
-      showMessage(loginMessage, "Name is required to recover your account.");
-      return;
-    }
-
-    const recoveredPhone = prompt(
-      "Enter your registered phone number:"
-    );
-
-    if (!recoveredPhone || !recoveredPhone.trim()) {
-      await signOut(auth);
-      showMessage(loginMessage, "Phone number is required.");
-      return;
-    }
-
-    try {
-
-      await set(ref(db, "users/" + user.uid), {
-        uid: user.uid,
-        fullName: recoveredName.trim(),
-        email: user.email,
-        phone: recoveredPhone.trim(),
-        role: "patient",
-        accountStatus: "active",
-        emailVerified: true,
-        createdAt: Date.now()
-      });
-
-      showMessage(
-        loginMessage,
-        "Your patient profile has been recovered successfully!",
-        true
-      );
-
-      redirectByRole("patient");
-      return;
-
-    } catch (recoveryError) {
-
-      console.error("Profile recovery error:", recoveryError);
-
-      await signOut(auth);
-
-      showMessage(
-        loginMessage,
-        "Profile recovery failed: " + recoveryError.message
-      );
-
-      return;
-    }
-  }
-}
-
-      const profile = snapshot.val();
-
-      // Check account type
-      if (profile.role !== selectedRole) {
-        await signOut(auth);
-
-        showMessage(
-          loginMessage,
-          "You selected the wrong account type. Please select " +
-          profile.role + " to continue."
+        const snapshot = await get(
+          ref(db, "institutions/" + user.uid)
         );
 
-        return;
-      }
+        if (!snapshot.exists()) {
+          await signOut(auth);
 
-      // Check account status
-      if (profile.accountStatus === "rejected" ||
-          profile.accountStatus === "suspended") {
+          showMessage(
+            loginMessage,
+            "No clinic registration was found for this account."
+          );
 
-        await signOut(auth);
+          return;
+        }
 
-        showMessage(
-          loginMessage,
-          "Your account is " + profile.accountStatus +
-          ". Please contact CareBridge support."
+        profile = snapshot.val();
+
+        if (profile.uid !== user.uid) {
+          await signOut(auth);
+
+          showMessage(loginMessage, "Invalid institution account.");
+
+          return;
+        }
+
+        if (
+          profile.approvalStatus === "rejected" ||
+          profile.approvalStatus === "suspended"
+        ) {
+          await signOut(auth);
+
+          showMessage(
+            loginMessage,
+            "Your institution application is " +
+            profile.approvalStatus +
+            ". Please contact CareBridge support."
+          );
+
+          return;
+        }
+
+        if (
+          !["pending", "approved"].includes(profile.approvalStatus)
+        ) {
+          await signOut(auth);
+
+          showMessage(
+            loginMessage,
+            "Your institution account has an invalid status."
+          );
+
+          return;
+        }
+
+      } else {
+
+        // PATIENT AND DOCTOR LOGIN
+        const snapshot = await get(
+          ref(db, "users/" + user.uid)
         );
 
-        return;
+        if (!snapshot.exists()) {
+
+          // PATIENT PROFILE RECOVERY
+          if (selectedRole === "patient" && user.emailVerified) {
+
+            const recoveredName = prompt(
+              "Your account profile is missing. Enter your full name:"
+            );
+
+            if (!recoveredName || !recoveredName.trim()) {
+              await signOut(auth);
+
+              showMessage(
+                loginMessage,
+                "Name is required to recover your account."
+              );
+
+              return;
+            }
+
+            const recoveredPhone = prompt(
+              "Enter your registered phone number:"
+            );
+
+            if (!recoveredPhone || !recoveredPhone.trim()) {
+              await signOut(auth);
+
+              showMessage(
+                loginMessage,
+                "Phone number is required."
+              );
+
+              return;
+            }
+
+            await set(ref(db, "users/" + user.uid), {
+              uid: user.uid,
+              fullName: recoveredName.trim(),
+              email: user.email,
+              phone: recoveredPhone.trim(),
+              role: "patient",
+              accountStatus: "active",
+              emailVerified: true,
+              createdAt: Date.now()
+            });
+
+            showMessage(
+              loginMessage,
+              "Your patient profile has been recovered successfully!",
+              true
+            );
+
+            redirectByRole("patient");
+            return;
+          }
+
+          await signOut(auth);
+
+          showMessage(
+            loginMessage,
+            "Account profile not found."
+          );
+
+          return;
+        }
+
+        profile = snapshot.val();
+
+        // CHECK ACCOUNT TYPE
+        if (profile.role !== selectedRole) {
+          await signOut(auth);
+
+          showMessage(
+            loginMessage,
+            "You selected the wrong account type. Please select " +
+            profile.role + " to continue."
+          );
+
+          return;
+        }
+
+        // CHECK ACCOUNT STATUS
+        if (
+          profile.accountStatus === "rejected" ||
+          profile.accountStatus === "suspended"
+        ) {
+          await signOut(auth);
+
+          showMessage(
+            loginMessage,
+            "Your account is " + profile.accountStatus +
+            ". Please contact CareBridge support."
+          );
+
+          return;
+        }
+
+        // DOCTOR APPROVAL CHECK
+        if (
+          profile.role === "doctor" &&
+          profile.accountStatus !== "approved"
+        ) {
+          await signOut(auth);
+
+          showMessage(
+            loginMessage,
+            "Your doctor account is awaiting CareBridge approval."
+          );
+
+          return;
+        }
+
+        if (profile.role !== "patient" &&
+            profile.role !== "doctor") {
+          await signOut(auth);
+
+          showMessage(loginMessage, "Invalid account type.");
+
+          return;
+        }
       }
 
-      // Doctor and clinic approval check
-      if (profile.role !== "patient" &&
-          profile.accountStatus !== "approved") {
-
-        await signOut(auth);
-
-        showMessage(
-          loginMessage,
-          "Your account is awaiting CareBridge approval."
-        );
-
-        return;
-      }
-
-      redirectByRole(profile.role);
+      redirectByRole(selectedRole);
 
     } catch (error) {
       console.error("Login error:", error);
 
       const messages = {
-        "auth/invalid-credential": "Incorrect email or password.",
-        "auth/user-not-found": "No account found with this email.",
-        "auth/wrong-password": "Incorrect email or password.",
-        "auth/invalid-email": "Please enter a valid email address.",
-        "auth/too-many-requests": "Too many attempts. Please try again later."
+        "auth/invalid-credential":
+          "Incorrect email or password.",
+
+        "auth/user-not-found":
+          "No account found with this email.",
+
+        "auth/wrong-password":
+          "Incorrect email or password.",
+
+        "auth/invalid-email":
+          "Please enter a valid email address.",
+
+        "auth/too-many-requests":
+          "Too many attempts. Please try again later.",
+
+        "auth/network-request-failed":
+          "Network error. Check your internet connection."
       };
 
       showMessage(
@@ -424,8 +551,9 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   });
 
-  // EXISTING SESSION CHECK
+  // AUTOMATIC SESSION CHECK
   onAuthStateChanged(auth, async function (user) {
+
     if (!user) return;
 
     try {
@@ -433,6 +561,26 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       if (!user.emailVerified) return;
 
+      // CHECK CLINIC SESSION
+      const clinicSnapshot = await get(
+        ref(db, "institutions/" + user.uid)
+      );
+
+      if (clinicSnapshot.exists()) {
+
+        const clinicProfile = clinicSnapshot.val();
+
+        if (
+          clinicProfile.uid === user.uid &&
+          ["pending", "approved"].includes(clinicProfile.approvalStatus)
+        ) {
+          redirectByRole("clinic");
+        }
+
+        return;
+      }
+
+      // CHECK PATIENT OR DOCTOR SESSION
       const snapshot = await get(
         ref(db, "users/" + user.uid)
       );
@@ -441,14 +589,18 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       const profile = snapshot.val();
 
-      if (profile.role === "patient" &&
-          profile.accountStatus === "active") {
+      if (
+        profile.role === "patient" &&
+        profile.accountStatus === "active"
+      ) {
         redirectByRole("patient");
       }
 
-      if ((profile.role === "doctor" || profile.role === "clinic") &&
-          profile.accountStatus === "approved") {
-        redirectByRole(profile.role);
+      if (
+        profile.role === "doctor" &&
+        profile.accountStatus === "approved"
+      ) {
+        redirectByRole("doctor");
       }
 
     } catch (error) {
