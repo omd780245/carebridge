@@ -820,3 +820,11 @@ a {
     width: 100%;
   }
 }
+/* SECURITY: Keep hidden admin sections invisible */
+[hidden] {
+  display: none !important;
+}
+/* Enforce hidden state across the entire admin portal */
+[hidden] {
+  display: none !important;
+}
