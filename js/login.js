@@ -47,6 +47,10 @@ document.addEventListener("DOMContentLoaded", async function () {
 
   const forgotPassword = document.getElementById("forgotPassword");
 
+  // SESSION FLAGS
+  let initialSessionCheckDone = false;
+  let loginAttemptStarted = false;
+
   // WAIT FOR FIREBASE SESSION PERSISTENCE
   try {
     await authPersistence;
@@ -266,6 +270,8 @@ document.addEventListener("DOMContentLoaded", async function () {
   loginForm.addEventListener("submit", async function (event) {
     event.preventDefault();
 
+    loginAttemptStarted = true;
+
     showMessage(loginMessage, "Logging in...");
 
     const email = loginEmail.value.trim().toLowerCase();
@@ -300,7 +306,8 @@ document.addEventListener("DOMContentLoaded", async function () {
 
       // CLINIC LOGIN
       if (selectedRole === "clinic") {
-                // PREVENT PATIENT ACCOUNTS FROM USING CLINIC LOGIN
+
+        // PREVENT PATIENT/DOCTOR ACCOUNTS FROM USING CLINIC LOGIN
         const patientSnapshot = await get(
           ref(db, "users/" + user.uid)
         );
@@ -371,14 +378,13 @@ document.addEventListener("DOMContentLoaded", async function () {
         }
 
       } else {
-                // PREVENT A CLINIC ACCOUNT FROM USING PATIENT/DOCTOR LOGIN
+
+        // PREVENT CLINIC ACCOUNTS FROM USING PATIENT/DOCTOR LOGIN
         const institutionSnapshot = await get(
           ref(db, "institutions/" + user.uid)
         );
 
         if (institutionSnapshot.exists()) {
-          const institutionProfile = institutionSnapshot.val();
-
           await signOut(auth);
 
           showMessage(
@@ -462,7 +468,7 @@ document.addEventListener("DOMContentLoaded", async function () {
 
         profile = snapshot.val();
 
-        // CHECK ACCOUNT TYPE
+        // CHECK SELECTED ACCOUNT TYPE
         if (profile.role !== selectedRole) {
           await signOut(auth);
 
@@ -506,8 +512,11 @@ document.addEventListener("DOMContentLoaded", async function () {
           return;
         }
 
-        if (profile.role !== "patient" &&
-            profile.role !== "doctor") {
+        // VALIDATE ACCOUNT TYPE
+        if (
+          profile.role !== "patient" &&
+          profile.role !== "doctor"
+        ) {
           await signOut(auth);
 
           showMessage(loginMessage, "Invalid account type.");
@@ -583,8 +592,15 @@ document.addEventListener("DOMContentLoaded", async function () {
     }
   });
 
-  // AUTOMATIC SESSION CHECK
+  // AUTOMATIC CHECK FOR AN EXISTING SESSION ONLY
   onAuthStateChanged(auth, async function (user) {
+
+    // Ignore repeated authentication changes
+    if (initialSessionCheckDone || loginAttemptStarted) {
+      return;
+    }
+
+    initialSessionCheckDone = true;
 
     if (!user) return;
 
@@ -626,6 +642,7 @@ document.addEventListener("DOMContentLoaded", async function () {
         profile.accountStatus === "active"
       ) {
         redirectByRole("patient");
+        return;
       }
 
       if (
